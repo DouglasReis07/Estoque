@@ -27,7 +27,9 @@ class Produto(db.Model):
 
 class Movimentacao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    produto_id = db.Column(db.Integer, db.ForeignKey('produto.id'), nullable=False)
+    # --- CORREÇÃO APLICADA AQUI ---
+    # Agora, uma movimentação (como um gasto) não precisa estar ligada a um produto.
+    produto_id = db.Column(db.Integer, db.ForeignKey('produto.id'), nullable=True)
     tipo = db.Column(db.String(10), nullable=False)
     quantidade = db.Column(db.Integer, nullable=True)
     valor = db.Column(db.Float, nullable=True)
@@ -39,7 +41,6 @@ class Movimentacao(db.Model):
 def adicionar_produtos_iniciais():
     """Adiciona uma lista de produtos ao banco de dados se a tabela estiver vazia."""
     if Produto.query.count() == 0:
-        # Todas as quantidades são 0 por padrão.
         produtos_para_adicionar = [
             Produto(nome='WIQUE777X', quantidade=0, preco_custo=50.0),
             Produto(nome='WIQUE777J', quantidade=0, preco_custo=55.0),

@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 @import url("sidebar.css");
 
+/* Variáveis de cores e estilos globais */
 :root {
     --primary-color: #4a90e2;
     --secondary-color: #f5f7fa;
@@ -8,8 +9,13 @@
     --card-bg: #ffffff;
     --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     --border-radius: 8px;
+
+    /* Sidebar (para uso global) */
+    --sidebar-collapsed-width: 80px;
+    --sidebar-expanded-width: 250px;
 }
 
+/* Reset e corpo */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--secondary-color);
@@ -18,6 +24,7 @@ body {
     line-height: 1.6;
 }
 
+/* Wrapper geral da aplicação */
 .content-wrapper {
     transition: margin-left 0.3s ease-in-out;
     margin-left: var(--sidebar-collapsed-width);
@@ -26,6 +33,11 @@ body {
     min-height: 100vh;
 }
 
+body:has(.sidebar:hover) .content-wrapper {
+    margin-left: var(--sidebar-expanded-width);
+}
+
+/* Header */
 .content-wrapper header {
     background-color: var(--primary-color);
     color: white;
@@ -34,8 +46,9 @@ body {
     box-shadow: var(--shadow);
 }
 
+/* Main */
 .content-wrapper main {
-    flex: 1; /* Faz o conteúdo principal crescer e empurrar o rodapé para baixo */
+    flex: 1;
     padding: 2rem;
     box-sizing: border-box;
     width: 100%;
@@ -43,6 +56,7 @@ body {
     margin: 0 auto;
 }
 
+/* Cards do Dashboard */
 .cards-container {
     display: flex;
     gap: 1.5rem;
@@ -72,6 +86,7 @@ body {
     margin-bottom: 0;
 }
 
+/* Conteúdo principal (Dashboard e Estoque) */
 .main-content {
     display: flex;
     gap: 2rem;
@@ -79,6 +94,7 @@ body {
     flex-wrap: wrap;
 }
 
+/* Forms */
 .forms-section {
     flex: 1;
     display: flex;
@@ -132,6 +148,7 @@ button:hover {
     background-color: #357abd;
 }
 
+/* Chart */
 .chart-container {
     flex: 1.5;
     background: var(--card-bg);
@@ -142,6 +159,7 @@ button:hover {
     min-height: 400px;
 }
 
+/* Product Section / Estoque */
 .product-section h2 {
     color: #333;
     border-bottom: 2px solid #ddd;
@@ -149,14 +167,11 @@ button:hover {
     margin-bottom: 1.5rem;
 }
 
+/* Footer */
 .content-wrapper footer {
     background-color: #333;
     color: white;
     text-align: center;
     padding: 1rem;
     margin-top: auto;
-}
-
-body:has(.sidebar:hover) .content-wrapper {
-    margin-left: var(--sidebar-expanded-width);
 }
