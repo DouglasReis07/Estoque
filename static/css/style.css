@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 @import url("sidebar.css");
 
-/* Variáveis de cores e estilos globais */
+/* Variáveis globais para cores e tamanhos */
 :root {
     --primary-color: #4a90e2;
     --secondary-color: #f5f7fa;
@@ -9,13 +9,9 @@
     --card-bg: #ffffff;
     --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     --border-radius: 8px;
-
-    /* Sidebar (para uso global) */
-    --sidebar-collapsed-width: 80px;
-    --sidebar-expanded-width: 250px;
 }
 
-/* Reset e corpo */
+/* Configurações base do corpo da página */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--secondary-color);
@@ -24,20 +20,21 @@ body {
     line-height: 1.6;
 }
 
-/* Wrapper geral da aplicação */
+/* O contêiner principal que envolve todo o conteúdo à direita do menu */
 .content-wrapper {
     transition: margin-left 0.3s ease-in-out;
     margin-left: var(--sidebar-collapsed-width);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    display: flex; /* Essencial para o layout flexível */
+    flex-direction: column; /* Organiza os filhos (header, main, footer) em coluna */
+    min-height: 100vh; /* Garante que o wrapper ocupe no mínimo a altura total da tela */
 }
 
+/* Ajusta a margem do conteúdo quando o menu lateral expande */
 body:has(.sidebar:hover) .content-wrapper {
     margin-left: var(--sidebar-expanded-width);
 }
 
-/* Header */
+/* Cabeçalho */
 .content-wrapper header {
     background-color: var(--primary-color);
     color: white;
@@ -46,9 +43,9 @@ body:has(.sidebar:hover) .content-wrapper {
     box-shadow: var(--shadow);
 }
 
-/* Main */
+/* Conteúdo principal (main) - A CHAVE DA CORREÇÃO */
 .content-wrapper main {
-    flex: 1;
+    flex: 1; /* Esta linha faz o 'main' crescer e ocupar todo o espaço vago, empurrando o footer para baixo */
     padding: 2rem;
     box-sizing: border-box;
     width: 100%;
@@ -56,7 +53,7 @@ body:has(.sidebar:hover) .content-wrapper {
     margin: 0 auto;
 }
 
-/* Cards do Dashboard */
+/* Cards de Resumo no Dashboard */
 .cards-container {
     display: flex;
     gap: 1.5rem;
@@ -86,7 +83,7 @@ body:has(.sidebar:hover) .content-wrapper {
     margin-bottom: 0;
 }
 
-/* Conteúdo principal (Dashboard e Estoque) */
+/* Seção principal do Dashboard */
 .main-content {
     display: flex;
     gap: 2rem;
@@ -94,7 +91,7 @@ body:has(.sidebar:hover) .content-wrapper {
     flex-wrap: wrap;
 }
 
-/* Forms */
+/* Seção de Formulários */
 .forms-section {
     flex: 1;
     display: flex;
@@ -148,7 +145,7 @@ button:hover {
     background-color: #357abd;
 }
 
-/* Chart */
+/* Gráfico */
 .chart-container {
     flex: 1.5;
     background: var(--card-bg);
@@ -159,7 +156,7 @@ button:hover {
     min-height: 400px;
 }
 
-/* Product Section / Estoque */
+/* Seção de Produtos (na página de estoque) */
 .product-section h2 {
     color: #333;
     border-bottom: 2px solid #ddd;
@@ -167,11 +164,11 @@ button:hover {
     margin-bottom: 1.5rem;
 }
 
-/* Footer */
+/* Rodapé */
 .content-wrapper footer {
     background-color: #333;
     color: white;
     text-align: center;
     padding: 1rem;
-    margin-top: auto;
+    margin-top: auto; /* Garante que ele fique no final do contêiner flexível */
 }

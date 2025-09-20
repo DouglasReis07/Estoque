@@ -1,6 +1,9 @@
 const API_URL = 'http://127.0.0.1:5000/api';
 let movimentacoesChart = null;
 
+// ===============================
+// DASHBOARD
+// ===============================
 async function carregarDadosDashboard() {
     try {
         const response = await fetch(`${API_URL}/dashboard`);
@@ -8,10 +11,18 @@ async function carregarDadosDashboard() {
         
         const data = await response.json();
 
+        // Atualiza cards de entradas e saídas
         document.getElementById('card-total-entradas-mes').textContent = data.cards.total_entradas_mes ?? 0;
         document.getElementById('card-total-saidas-mes').textContent = data.cards.total_saidas_mes ?? 0;
-        document.getElementById('card-total-gastos').textContent = `R$ ${(data.cards.total_gastos ?? 0).toFixed(2)}`;
+        
+        // Pega o elemento span onde o valor dos gastos é exibido
+        const spanTotalGastos = document.getElementById('card-total-gastos');
+        // Converte o valor recebido para um número, garantindo que seja 0 se for nulo
+        const gastosValue = parseFloat(data.cards.total_gastos) || 0;
+        // Formata o número com 2 casas decimais e atualiza na tela
+        spanTotalGastos.textContent = gastosValue.toFixed(2);
 
+        // Atualiza gráfico
         if (data.grafico_movimentacoes) {
             renderizarGrafico(data.grafico_movimentacoes.labels, data.grafico_movimentacoes.data);
         }
@@ -34,22 +45,14 @@ function renderizarGrafico(labels, data) {
             datasets: [{
                 label: 'Movimentações',
                 data,
-                backgroundColor: [
-                    'rgba(74, 144, 226, 0.6)',
-                    'rgba(244, 67, 54, 0.6)',
-                    'rgba(255, 152, 0, 0.6)'
-                ],
-                borderColor: [
-                    'rgba(74, 144, 226, 1)',
-                    'rgba(244, 67, 54, 1)',
-                    'rgba(255, 152, 0, 1)'
-                ],
+                backgroundColor: 'rgba(74, 144, 226, 0.6)',
+                borderColor: 'rgba(74, 144, 226, 1)',
                 borderWidth: 1
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { display: false }
             },
@@ -63,6 +66,9 @@ function renderizarGrafico(labels, data) {
     });
 }
 
+// ===============================
+// ESTOQUE
+// ===============================
 async function carregarProdutos() {
     try {
         const response = await fetch(`${API_URL}/produtos`);
@@ -92,22 +98,22 @@ async function carregarProdutos() {
             }
 
             card.innerHTML = `
-    <div class="card-header">${produto.nome}</div>
-    <div class="card-body">
-        <div class="card-item">
-            <span>Estoque:</span>
-            <span class="stock-indicator ${stockClass}">${stockLevelText}</span>
-        </div>
-        <div class="card-item">
-            <span>Custo (un.):</span>
-            <span>R$ ${produto.preco_custo.toFixed(2)}</span>
-        </div>
-        <div class="card-item">
-            <span>Valor Total:</span>
-            <span>R$ ${(produto.quantidade * produto.preco_custo).toFixed(2)}</span>
-        </div>
-    </div>
-`;
+                <div class="card-header">${produto.nome}</div>
+                <div class="card-body">
+                    <div class="card-item">
+                        <span>Estoque:</span>
+                        <span class="stock-indicator ${stockClass}">${stockLevelText}</span>
+                    </div>
+                    <div class="card-item">
+                        <span>Custo (un.):</span>
+                        <span>R$ ${produto.preco_custo.toFixed(2)}</span>
+                    </div>
+                    <div class="card-item">
+                        <span>Valor Total:</span>
+                        <span>R$ ${(produto.quantidade * produto.preco_custo).toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
             cardContainer.appendChild(card);
         });
 
@@ -116,6 +122,9 @@ async function carregarProdutos() {
     }
 }
 
+// ===============================
+// FORMULÁRIOS
+// ===============================
 async function popularSelectProdutos() {
     const selectProduto = document.getElementById('select-produto');
     if (!selectProduto) return;
@@ -153,7 +162,6 @@ async function adicionarProduto(event) {
 
         if (response.status === 201) {
             document.getElementById('form-add-produto').reset();
-            carregarProdutos();
             popularSelectProdutos();
         } else {
             const error = await response.json();
@@ -186,7 +194,6 @@ async function registrarMovimentacao(event) {
         if (response.ok) {
             document.getElementById('form-movimentacao').reset();
             carregarDadosDashboard();
-            carregarProdutos();
         } else {
             const error = await response.json();
             alert(`Erro: ${error.erro || 'Não foi possível registrar a movimentação'}`);
@@ -220,6 +227,9 @@ async function registrarGasto(event) {
     }
 }
 
+// ===============================
+// INICIALIZAÇÃO
+// ===============================
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('product-cards-container')) {
         carregarProdutos();

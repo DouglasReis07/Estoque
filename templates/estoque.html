@@ -1,42 +1,83 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estoque - Controle de Estoque</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
-</head>
-<body>
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-            <span class="link-text logo-text">Meu Estoque</span>
-        </div>
-        <ul class="sidebar-links">
-            <li><a href="{{ url_for('dashboard') }}"><span class="link-text">Dashboard</span></a></li>
-            <li><a href="{{ url_for('estoque_page') }}"><span class="link-text">Estoque</span></a></li>
-        </ul>
-    </nav>
-    
-    <div class="content-wrapper">
-        <header><h1>Estoque Atual</h1></header>
 
-        <main>
-            <section class="product-section">
-                <div class="product-cards-container" id="product-cards-container">
-                </div>
-            </section>
-        </main>
-        
-        <footer>
-            <p>Sistema de Controle de Estoque &copy; 2025</p>
-        </footer>
-    </div>
-    
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Estoque - Controle de Estoque</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+
+</head>
+
+<body>
+
+    <nav class="sidebar">
+
+        <div class="sidebar-header">
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+
+            </svg>
+
+            <span class="link-text logo-text">Meu Estoque</span>
+
+        </div>
+
+        <ul class="sidebar-links">
+
+            <li><a href="{{ url_for('dashboard') }}"><span class="link-text">Dashboard</span></a></li>
+
+            <li><a href="{{ url_for('estoque_page') }}"><span class="link-text">Estoque</span></a></li>
+
+        </ul>
+
+    </nav>
+
+   
+
+    <div class="content-wrapper">
+
+        <header><h1>Estoque Atual</h1></header>
+
+
+
+        <main>
+
+            <section class="product-section">
+
+                <div class="product-cards-container" id="product-cards-container">
+
+                </div>
+
+            </section>
+
+        </main>
+
+       
+
+        <footer>
+
+            <p>Sistema de Controle de Estoque &copy; 2025</p>
+
+        </footer>
+
+    </div>
+
+   
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
 </body>
+
 </html>

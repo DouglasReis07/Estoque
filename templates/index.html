@@ -20,17 +20,14 @@
             <li><a href="{{ url_for('estoque_page') }}"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6A1.125 1.125 0 012.25 12v-4.875zM12 15a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6A.75.75 0 0112 15zm1.5-6a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zM12 6a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6A.75.75 0 0112 6zM2.25 15.125c0-.621.504-1.125 1.125-1.125h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6A1.125 1.125 0 012.25 19v-3.875z" /></svg><span class="link-text">Estoque</span></a></li>
         </ul>
     </nav>
-
     <div class="content-wrapper">
         <header><h1>Dashboard de Estoque</h1></header>
-        
-        <main class="page-container">
+        <main>
             <section class="cards-container">
                 <div class="card"><h3>Total de Entradas (Mês)</h3><p id="card-total-entradas-mes">0</p></div>
                 <div class="card"><h3>Total de Saídas (Mês)</h3><p id="card-total-saidas-mes">0</p></div>
                 <div class="card"><h3>Total de Gastos</h3><p>R$ <span id="card-total-gastos">0.00</span></p></div>
             </section>
-
             <section class="main-content">
                 <div class="forms-section">
                     <div class="form-card">
@@ -42,7 +39,6 @@
                             <button type="submit">Adicionar Produto</button>
                         </form>
                     </div>
-
                     <div class="form-card">
                         <h2>Registrar Movimentação</h2>
                         <form id="form-movimentacao">
@@ -53,8 +49,7 @@
                             <button type="submit">Registrar</button>
                         </form>
                     </div>
-
-                    <div class="form-card">
+                     <div class="form-card">
                         <h2>Registrar Gasto</h2>
                         <form id="form-gasto">
                             <input type="number" id="valor-gasto" placeholder="Valor do Gasto (R$)" step="0.01" min="0" required>
@@ -63,14 +58,12 @@
                         </form>
                     </div>
                 </div>
-
                 <div class="chart-container">
                     <h2>Produtos Mais Movimentados</h2>
                     <canvas id="movimentacoesChart"></canvas>
                 </div>
             </section>
         </main>
-
         <footer><p>Sistema de Controle de Estoque &copy; 2025</p></footer>
     </div>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>

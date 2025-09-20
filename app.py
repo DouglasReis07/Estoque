@@ -5,17 +5,14 @@ from flask_cors import CORS
 from datetime import datetime, date
 from sqlalchemy import func
 
-# --- Configuração Inicial ---
 app = Flask(__name__)
 CORS(app)
 
-# Configuração do Banco de Dados SQLite
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'estoque.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# --- Modelos do Banco de Dados ---
 class Produto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False, unique=True)
@@ -27,8 +24,6 @@ class Produto(db.Model):
 
 class Movimentacao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # --- CORREÇÃO APLICADA AQUI ---
-    # Agora, uma movimentação (como um gasto) não precisa estar ligada a um produto.
     produto_id = db.Column(db.Integer, db.ForeignKey('produto.id'), nullable=True)
     tipo = db.Column(db.String(10), nullable=False)
     quantidade = db.Column(db.Integer, nullable=True)
@@ -37,25 +32,22 @@ class Movimentacao(db.Model):
     data = db.Column(db.DateTime, default=datetime.utcnow)
     produto = db.relationship('Produto', backref=db.backref('movimentacoes', lazy=True))
 
-# --- Função para Adicionar Produtos Iniciais ---
 def adicionar_produtos_iniciais():
-    """Adiciona uma lista de produtos ao banco de dados se a tabela estiver vazia."""
     if Produto.query.count() == 0:
         produtos_para_adicionar = [
-            Produto(nome='WIQUE777X', quantidade=0, preco_custo=50.0),
-            Produto(nome='WIQUE777J', quantidade=0, preco_custo=55.0),
-            Produto(nome='GV500', quantidade=0, preco_custo=120.0),
-            Produto(nome='RIBBON', quantidade=0, preco_custo=15.5),
-            Produto(nome='LACRE LOOVI', quantidade=0, preco_custo=0.5),
-            Produto(nome='PLASTICO INSUFILM', quantidade=0, preco_custo=25.0),
-            Produto(nome='ETIQUETAS NF', quantidade=0, preco_custo=0.2),
-            Produto(nome='ETIQUETAS QR CODE', quantidade=0, preco_custo=0.1)
+            Produto(nome='WIQUE777X', quantidade=0, preco_custo=894.73),
+            Produto(nome='WIQUE777J', quantidade=0, preco_custo=894.73),
+            Produto(nome='GV500', quantidade=0, preco_custo=894.73),
+            Produto(nome='RIBBON', quantidade=0, preco_custo=8.40),
+            Produto(nome='LACRE LOOVI', quantidade=0, preco_custo=21.79),
+            Produto(nome='PLASTICO STRETCH', quantidade=0, preco_custo=75.99),
+            Produto(nome='ETIQUETAS NF', quantidade=0, preco_custo=19.00),
+            Produto(nome='ETIQUETAS QR CODE', quantidade=0, preco_custo=19.00)
         ]
         db.session.bulk_save_objects(produtos_para_adicionar)
         db.session.commit()
         print("Produtos iniciais adicionados ao banco de dados com estoque zerado.")
 
-# --- Rotas para as Páginas ---
 @app.route('/')
 def dashboard():
     return render_template('index.html')
@@ -64,7 +56,6 @@ def dashboard():
 def estoque_page():
     return render_template('estoque.html')
 
-# --- API Endpoints ---
 @app.route('/api/produtos', methods=['GET', 'POST'])
 def gerenciar_produtos():
     if request.method == 'POST':
@@ -106,14 +97,21 @@ def get_dashboard_data():
     first_day_of_month = today.replace(day=1)
     total_entradas_mes = db.session.query(func.sum(Movimentacao.quantidade)).filter(Movimentacao.tipo == 'entrada', Movimentacao.data >= first_day_of_month).scalar() or 0
     total_saidas_mes = db.session.query(func.sum(Movimentacao.quantidade)).filter(Movimentacao.tipo == 'saida', Movimentacao.data >= first_day_of_month).scalar() or 0
-    total_gastos = db.session.query(func.sum(Movimentacao.valor)).filter(Movimentacao.tipo == 'gasto').scalar() or 0
+    
+    # --- CORREÇÃO APLICADA AQUI ---
+    total_gastos = db.session.query(func.sum(Movimentacao.valor)).filter(Movimentacao.tipo == 'gasto').scalar() or 0.0
+
     produtos_mais_movimentados = db.session.query(Produto.nome, func.count(Movimentacao.id).label('total_mov')).join(Movimentacao).group_by(Produto.nome).order_by(db.desc('total_mov')).limit(5).all()
+    
     return jsonify({
-        'cards': {'total_entradas_mes': total_entradas_mes, 'total_saidas_mes': total_saidas_mes, 'total_gastos': f'{total_gastos:.2f}'},
+        'cards': {
+            'total_entradas_mes': total_entradas_mes, 
+            'total_saidas_mes': total_saidas_mes, 
+            'total_gastos': total_gastos  # <-- Enviando como NÚMERO
+        },
         'grafico_movimentacoes': {'labels': [row[0] for row in produtos_mais_movimentados], 'data': [row[1] for row in produtos_mais_movimentados]}
     })
 
-# --- Bloco de Execução Principal ---
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
