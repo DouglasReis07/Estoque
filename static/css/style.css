@@ -18,29 +18,37 @@ body {
     color: var(--text-color);
     margin: 0;
     line-height: 1.6;
+    /* Adicionado para garantir que o rodapé fique no final */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Novo estilo para o cabeçalho de página inteira */
+.page-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: margin-left 0.3s ease-in-out;
+    margin-left: var(--sidebar-collapsed-width);
+    flex-shrink: 0;
 }
 
 /* O contêiner principal que envolve todo o conteúdo à direita do menu */
 .content-wrapper {
     transition: margin-left 0.3s ease-in-out;
     margin-left: var(--sidebar-collapsed-width);
-    display: flex; /* Essencial para o layout flexível */
-    flex-direction: column; /* Organiza os filhos (header, main, footer) em coluna */
-    min-height: 100vh; /* Garante que o wrapper ocupe no mínimo a altura total da tela */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Faz o wrapper crescer para ocupar o espaço vago */
 }
 
-/* Ajusta a margem do conteúdo quando o menu lateral expande */
-body:has(.sidebar:hover) .content-wrapper {
+/* Ajusta a margem do conteúdo E do novo header quando o menu lateral expande */
+body:has(.sidebar:hover) .content-wrapper,
+body:has(.sidebar:hover) .page-header {
     margin-left: var(--sidebar-expanded-width);
-}
-
-/* Cabeçalho */
-.content-wrapper header {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 1rem 2rem;
-    text-align: center;
-    box-shadow: var(--shadow);
 }
 
 /* Conteúdo principal (main) - A CHAVE DA CORREÇÃO */
@@ -153,8 +161,22 @@ button:hover {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     min-width: 300px;
-    min-height: 400px;
+    position: relative;
+    height: 60vh; /* padrão em telas grandes */
 }
+
+#movimentacoesChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Ajuste para celular */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 40vh; /* ocupa menos no mobile */
+    }
+}
+
 
 /* Seção de Produtos (na página de estoque) */
 .product-section h2 {
