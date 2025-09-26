@@ -74,3 +74,25 @@
     visibility: visible;
     transition-delay: 0.1s;
 }
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-links {
+    flex-grow: 1; /* Ocupa todo o espaço disponível, empurrando o footer para baixo */
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    text-align: center;
+    border-top: 1px solid #34495e; /* opcional, apenas para separar */
+}
+
+.sidebar-footer .link-text {
+    opacity: 1; /* garante que o nome sempre apareça */
+    visibility: visible;
+    font-weight: bold;
+    color: #ecf0f1;
+}

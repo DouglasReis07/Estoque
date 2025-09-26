@@ -1,24 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 @import url("sidebar.css");
 
 /* Variáveis globais para cores e tamanhos */
 :root {
     --primary-color: #4a90e2;
-    --secondary-color: #f5f7fa;
+    --secondary-color: #0080ff; /* Fundo da página */
     --text-color: #333;
-    --card-bg: #ffffff;
+    --card-bg: #ffffffcc; /* Card levemente translúcido */
     --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     --border-radius: 8px;
 }
 
 /* Configurações base do corpo da página */
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--secondary-color);
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom, #011a2e, #011a2e); /* gradiente de fundo */
     color: var(--text-color);
     margin: 0;
     line-height: 1.6;
-    /* Adicionado para garantir que o rodapé fique no final */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -42,7 +40,7 @@ body {
     margin-left: var(--sidebar-collapsed-width);
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Faz o wrapper crescer para ocupar o espaço vago */
+    flex-grow: 1; 
 }
 
 /* Ajusta a margem do conteúdo E do novo header quando o menu lateral expande */
@@ -51,9 +49,9 @@ body:has(.sidebar:hover) .page-header {
     margin-left: var(--sidebar-expanded-width);
 }
 
-/* Conteúdo principal (main) - A CHAVE DA CORREÇÃO */
+/* Conteúdo principal (main) */
 .content-wrapper main {
-    flex: 1; /* Esta linha faz o 'main' crescer e ocupar todo o espaço vago, empurrando o footer para baixo */
+    flex: 1;
     padding: 2rem;
     box-sizing: border-box;
     width: 100%;
@@ -115,7 +113,7 @@ body:has(.sidebar:hover) .page-header {
     box-shadow: var(--shadow);
 }
 
-.form-card h2 {
+.form-card h2, .form-card h4 {
     margin-top: 0;
     border-bottom: 2px solid var(--secondary-color);
     padding-bottom: 0.5rem;
@@ -132,7 +130,6 @@ input, select, textarea, button {
     border-radius: 4px;
     border: 1px solid #ccc;
     font-size: 1rem;
-    font-family: 'Roboto', sans-serif;
 }
 
 textarea {
@@ -162,7 +159,7 @@ button:hover {
     box-shadow: var(--shadow);
     min-width: 300px;
     position: relative;
-    height: 60vh; /* padrão em telas grandes */
+    height: 60vh;
 }
 
 #movimentacoesChart {
@@ -173,10 +170,9 @@ button:hover {
 /* Ajuste para celular */
 @media (max-width: 768px) {
     .chart-container {
-        height: 40vh; /* ocupa menos no mobile */
+        height: 40vh;
     }
 }
-
 
 /* Seção de Produtos (na página de estoque) */
 .product-section h2 {
@@ -192,5 +188,19 @@ button:hover {
     color: white;
     text-align: center;
     padding: 1rem;
-    margin-top: auto; /* Garante que ele fique no final do contêiner flexível */
+    margin-top: auto;
+}
+
+/* Ajustes apenas para os títulos do index.html */
+.titulo-dashboard {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.titulo-secao {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 0.8rem;
+    color: #444;
 }

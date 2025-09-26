@@ -11,18 +11,13 @@ async function carregarDadosDashboard() {
         
         const data = await response.json();
 
-        // Atualiza cards de entradas e saídas
         document.getElementById('card-total-entradas-mes').textContent = data.cards.total_entradas_mes ?? 0;
         document.getElementById('card-total-saidas-mes').textContent = data.cards.total_saidas_mes ?? 0;
-        
-        // Pega o elemento span onde o valor dos gastos é exibido
+
         const spanTotalGastos = document.getElementById('card-total-gastos');
-        // Converte o valor recebido para um número, garantindo que seja 0 se for nulo
         const gastosValue = parseFloat(data.cards.total_gastos) || 0;
-        // Formata o número com 2 casas decimais e atualiza na tela
         spanTotalGastos.textContent = gastosValue.toFixed(2);
 
-        // Atualiza gráfico
         if (data.grafico_movimentacoes) {
             renderizarGrafico(data.grafico_movimentacoes.labels, data.grafico_movimentacoes.data);
         }
@@ -98,8 +93,8 @@ async function carregarProdutos() {
             }
 
             card.innerHTML = `
-                <div class="card-header">${produto.nome}</div>
-                <div class="card-body">
+                <div class="product-header">${produto.nome}</div>
+                <div class="product-body">
                     <div class="card-item">
                         <span>Estoque:</span>
                         <span class="stock-indicator ${stockClass}">${stockLevelText}</span>
@@ -163,6 +158,7 @@ async function adicionarProduto(event) {
         if (response.status === 201) {
             document.getElementById('form-add-produto').reset();
             popularSelectProdutos();
+            carregarProdutos();
         } else {
             const error = await response.json();
             alert(`Erro: ${error.message || 'Não foi possível adicionar o produto'}`);
@@ -194,6 +190,7 @@ async function registrarMovimentacao(event) {
         if (response.ok) {
             document.getElementById('form-movimentacao').reset();
             carregarDadosDashboard();
+            carregarProdutos();
         } else {
             const error = await response.json();
             alert(`Erro: ${error.erro || 'Não foi possível registrar a movimentação'}`);
