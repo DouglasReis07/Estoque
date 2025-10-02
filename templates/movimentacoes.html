@@ -11,7 +11,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Sidebar -->
     <nav class="sidebar">
         <div class="sidebar-header">
             <i class="bi bi-list"></i>
@@ -22,22 +21,17 @@
             <li><a href="{{ url_for('estoque_page') }}"> <i class="bi bi-box-seam"></i><span class="link-text" > Estoque </span></a></li>
             <li><a href="{{ url_for('movimentacoes_page') }}"> <i class="bi bi-arrow-left-right"> </i><span class="link-text"> Movimentações </span></a></li>
         </ul>
-
-        <!-- Aqui incluímos o GARRY PRO no rodapé da sidebar -->
         <div class="sidebar-footer">
             <span class="link-text logo-text">GARRY PRO</span>
         </div>
     </nav>
     
-    <!-- Header -->
     <header class="page-header">
         <h2><i class="bi bi-arrow-left-right"></i> Movimentações</h2>
     </header>
 
-    <!-- Conteúdo -->
     <div class="content-wrapper">
         <main>
-            <!-- Filtro -->
             <section class="mb-4">
                 <h4><i class="bi bi-funnel"></i> Filtro por mês</h4>
                 <div class="row g-3">
@@ -70,7 +64,6 @@
                 </div>
             </section>
 
-            <!-- Cards resumo -->
             <section class="mb-4">
                 <div class="row text-center" id="cards-resumo">
                     <div class="col-md-4">
@@ -100,7 +93,6 @@
                 </div>
             </section>
 
-            <!-- Tabela -->
             <section>
                 <h3 class="titulo-secao"><i class="bi bi-clock-history"></i> Histórico</h3>
                 <div class="table-responsive">
@@ -141,12 +133,10 @@
                 const response = await fetch(url);
                 const data = await response.json();
 
-                // Atualiza cards
                 document.getElementById("card-entradas").innerText = data.cards.total_entradas;
                 document.getElementById("card-saidas").innerText = data.cards.total_saidas;
                 document.getElementById("card-gastos").innerText = "R$ " + (data.cards.total_gastos || 0).toFixed(2);
 
-                // Atualiza tabela
                 const tabela = document.getElementById("tabela-movimentacoes");
                 tabela.innerHTML = "";
 
@@ -155,13 +145,28 @@
                     return;
                 }
 
+                const formatarTipo = (tipo) => {
+                    switch (tipo) {
+                        case 'entrada': return '<span class="badge bg-success">Entrada</span>';
+                        case 'saida': return '<span class="badge bg-danger">Saída</span>';
+                        case 'gasto': return '<span class="badge bg-warning text-dark">Gasto</span>';
+                        case 'ajuste': return '<span class="badge bg-primary">Ajuste</span>';
+                        case 'exclusao': return '<span class="badge bg-dark">Exclusão</span>';
+                        default: return tipo;
+                    }
+                };
+
                 data.tabela.forEach(mov => {
                     const row = document.createElement("tr");
+                    const quantidadeCell = mov.tipo === 'ajuste' && mov.quantidade != null 
+                        ? (mov.quantidade > 0 ? `+${mov.quantidade}` : mov.quantidade) 
+                        : (mov.quantidade ?? "-");
+                    
                     row.innerHTML = `
                         <td>${mov.id}</td>
                         <td>${mov.produto_nome || "-"}</td>
-                        <td>${mov.tipo}</td>
-                        <td>${mov.quantidade ?? "-"}</td>
+                        <td>${formatarTipo(mov.tipo)}</td>
+                        <td>${quantidadeCell}</td>
                         <td>${mov.valor ? "R$ " + mov.valor.toFixed(2) : "-"}</td>
                         <td>${mov.descricao || "-"}</td>
                         <td>${mov.data}</td>

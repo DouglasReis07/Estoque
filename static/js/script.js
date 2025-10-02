@@ -1,4 +1,4 @@
-const API_URL = 'http://127.0.0.1:5000/api';
+const API_URL = '/api';
 let movimentacoesChart = null;
 
 // ===============================
@@ -42,7 +42,8 @@ function renderizarGrafico(labels, data) {
                 data,
                 backgroundColor: 'rgba(74, 144, 226, 0.6)',
                 borderColor: 'rgba(74, 144, 226, 1)',
-                borderWidth: 1
+                borderWidth: 1,
+                barPercentage: 0.5
             }]
         },
         options: {
@@ -54,7 +55,18 @@ function renderizarGrafico(labels, data) {
             scales: {
                 y: {
                     beginAtZero: true,
-                    ticks: { stepSize: 1 }
+                    ticks: {
+                        stepSize: 1
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 10
+                        },
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
                 }
             }
         }
@@ -108,8 +120,32 @@ async function carregarProdutos() {
                         <span>R$ ${(produto.quantidade * produto.preco_custo).toFixed(2)}</span>
                     </div>
                 </div>
+                <div class="product-card-actions">
+                    <button class="btn-action btn-edit" data-product-id="${produto.id}">
+                        <i class="bi bi-pencil"></i> Editar
+                    </button>
+                    <button class="btn-action btn-delete" data-product-id="${produto.id}" data-product-name="${produto.nome}">
+                        <i class="bi bi-trash"></i> Excluir
+                    </button>
+                </div>
             `;
             cardContainer.appendChild(card);
+        });
+
+        document.querySelectorAll('.btn-edit').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const produto_id = event.currentTarget.dataset.productId;
+                const produto = produtos.find(p => p.id == produto_id);
+                openEditModal(produto);
+            });
+        });
+
+        document.querySelectorAll('.btn-delete').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const produto_id = event.currentTarget.dataset.productId;
+                const produto_nome = event.currentTarget.dataset.productName;
+                excluirProduto(produto_id, produto_nome);
+            });
         });
 
     } catch (error) {
@@ -158,7 +194,9 @@ async function adicionarProduto(event) {
         if (response.status === 201) {
             document.getElementById('form-add-produto').reset();
             popularSelectProdutos();
-            carregarProdutos();
+            if (document.getElementById('product-cards-container')) {
+                carregarProdutos();
+            }
         } else {
             const error = await response.json();
             alert(`Erro: ${error.message || 'Não foi possível adicionar o produto'}`);
@@ -190,7 +228,9 @@ async function registrarMovimentacao(event) {
         if (response.ok) {
             document.getElementById('form-movimentacao').reset();
             carregarDadosDashboard();
-            carregarProdutos();
+            if (document.getElementById('product-cards-container')) {
+                carregarProdutos();
+            }
         } else {
             const error = await response.json();
             alert(`Erro: ${error.erro || 'Não foi possível registrar a movimentação'}`);
@@ -225,17 +265,83 @@ async function registrarGasto(event) {
 }
 
 // ===============================
+// EDITAR E EXCLUIR PRODUTOS
+// ===============================
+function openEditModal(produto) {
+    document.getElementById('edit-produto-id').value = produto.id;
+    document.getElementById('edit-nome-produto').value = produto.nome;
+    document.getElementById('edit-qtd-produto').value = produto.quantidade;
+    document.getElementById('edit-custo-produto').value = produto.preco_custo;
+    document.getElementById('edit-modal-overlay').style.display = 'flex';
+}
+
+function closeEditModal() {
+    document.getElementById('edit-modal-overlay').style.display = 'none';
+}
+
+async function salvarEdicaoProduto(event) {
+    event.preventDefault();
+    const produto_id = document.getElementById('edit-produto-id').value;
+    const nome = document.getElementById('edit-nome-produto').value.trim();
+    const quantidade = parseInt(document.getElementById('edit-qtd-produto').value);
+    const preco_custo = parseFloat(document.getElementById('edit-custo-produto').value);
+
+    try {
+        const response = await fetch(`${API_URL}/produtos/${produto_id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome, quantidade, preco_custo })
+        });
+
+        if (response.ok) {
+            closeEditModal();
+            carregarProdutos();
+            alert('Produto atualizado com sucesso!');
+        } else {
+            const error = await response.json();
+            alert(`Erro: ${error.erro || 'Não foi possível atualizar o produto'}`);
+        }
+    } catch (error) {
+        console.error('Erro ao salvar edição:', error);
+        alert('Erro de conexão ao salvar.');
+    }
+}
+
+async function excluirProduto(produto_id, produto_nome) {
+    if (!confirm(`Tem certeza que deseja excluir o produto "${produto_nome}"?\nTODO o histórico de movimentações deste item será perdido!`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/produtos/${produto_id}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            carregarProdutos();
+            alert('Produto excluído com sucesso!');
+        } else {
+            alert('Erro ao excluir o produto.');
+        }
+    } catch (error) {
+        console.error('Erro ao excluir:', error);
+        alert('Erro de conexão ao excluir.');
+    }
+}
+
+// ===============================
 // INICIALIZAÇÃO
 // ===============================
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('product-cards-container')) {
         carregarProdutos();
+        document.getElementById('modal-close-btn').addEventListener('click', closeEditModal);
+        document.getElementById('form-edit-produto').addEventListener('submit', salvarEdicaoProduto);
     }
 
     if (document.getElementById('card-total-entradas-mes')) {
         carregarDadosDashboard();
         popularSelectProdutos();
-
         document.getElementById('form-add-produto')?.addEventListener('submit', adicionarProduto);
         document.getElementById('form-movimentacao')?.addEventListener('submit', registrarMovimentacao);
         document.getElementById('form-gasto')?.addEventListener('submit', registrarGasto);

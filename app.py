@@ -2,7 +2,7 @@ import os
 from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from datetime import datetime, date
+from datetime import datetime
 from sqlalchemy import func
 from pytz import timezone
 
@@ -42,11 +42,11 @@ class Produto(db.Model):
 class Movimentacao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     produto_id = db.Column(db.Integer, db.ForeignKey('produto.id'), nullable=True)
-    tipo = db.Column(db.String(10), nullable=False)  # entrada | saida | gasto
+    tipo = db.Column(db.String(10), nullable=False)  # entrada | saida | gasto | ajuste | exclusao
     quantidade = db.Column(db.Integer, nullable=True)
     valor = db.Column(db.Float, nullable=True)
     descricao = db.Column(db.String(200))
-    data = db.Column(db.DateTime, default=lambda: datetime.now(fuso_sp))  # usa fuso de SP
+    data = db.Column(db.DateTime, default=lambda: datetime.now(fuso_sp))
     produto = db.relationship('Produto', backref=db.backref('movimentacoes', lazy=True))
 
 
@@ -68,7 +68,7 @@ def adicionar_produtos_iniciais():
         ]
         db.session.bulk_save_objects(produtos_para_adicionar)
         db.session.commit()
-        print("Produtos iniciais adicionados ao banco de dados com estoque zerado.")
+        print("Produtos iniciais adicionados ao banco de dados.")
 
 
 # ===============================
@@ -121,7 +121,6 @@ def gerenciar_produtos():
 @app.route('/api/movimentacoes', methods=['GET', 'POST'])
 def movimentacoes():
     if request.method == 'GET':
-        # Filtros opcionais
         mes = request.args.get('mes', type=int)
         ano = request.args.get('ano', type=int)
 
@@ -134,7 +133,6 @@ def movimentacoes():
 
         movs = query.order_by(Movimentacao.data.desc()).all()
 
-        # Resumo para os cards
         total_entradas = sum(m.quantidade for m in movs if m.tipo == 'entrada' and m.quantidade)
         total_saidas = sum(m.quantidade for m in movs if m.tipo == 'saida' and m.quantidade)
         total_gastos = sum(m.valor for m in movs if m.tipo == 'gasto' and m.valor)
@@ -159,7 +157,6 @@ def movimentacoes():
             ]
         })
 
-    # POST: registrar movimentação
     dados = request.get_json()
     tipo = dados['tipo']
 
@@ -209,7 +206,7 @@ def get_dashboard_data():
     total_saidas_mes = db.session.query(func.sum(Movimentacao.quantidade))\
         .filter(Movimentacao.tipo == 'saida', Movimentacao.data >= first_day_of_month).scalar() or 0
     total_gastos = db.session.query(func.sum(Movimentacao.valor))\
-        .filter(Movimentacao.tipo == 'gasto').scalar() or 0.0
+        .filter(Movimentacao.tipo == 'gasto', Movimentacao.data >= first_day_of_month).scalar() or 0.0
 
     produtos_mais_movimentados = db.session.query(
         Produto.nome,
@@ -219,8 +216,8 @@ def get_dashboard_data():
     
     return jsonify({
         'cards': {
-            'total_entradas_mes': total_entradas_mes, 
-            'total_saidas_mes': total_saidas_mes, 
+            'total_entradas_mes': total_entradas_mes,  
+            'total_saidas_mes': total_saidas_mes,  
             'total_gastos': total_gastos
         },
         'grafico_movimentacoes': {
@@ -231,10 +228,78 @@ def get_dashboard_data():
 
 
 # ===============================
+# API - EDITAR E EXCLUIR PRODUTOS
+# ===============================
+@app.route('/api/produtos/<int:produto_id>', methods=['PUT', 'DELETE'])
+def gerenciar_produto_especifico(produto_id):
+    produto = Produto.query.get_or_404(produto_id)
+
+    if request.method == 'PUT':
+        dados = request.get_json()
+        if not dados or 'nome' not in dados or 'quantidade' not in dados or 'preco_custo' not in dados:
+            return jsonify({'erro': 'Dados incompletos fornecidos'}), 400
+
+        nome_antigo = produto.nome
+        qtd_antiga = produto.quantidade
+        custo_antigo = produto.preco_custo
+        
+        novo_nome = dados['nome']
+        nova_qtd = int(dados['quantidade'])
+        novo_custo = float(dados['preco_custo'])
+
+        nome_existente = Produto.query.filter(Produto.nome == novo_nome, Produto.id != produto_id).first()
+        if nome_existente:
+            return jsonify({'erro': 'Já existe um produto com este nome.'}), 409
+
+        log_parts = []
+        diferenca_qtd = nova_qtd - qtd_antiga
+        if diferenca_qtd != 0:
+            produto.quantidade = nova_qtd 
+            log_parts.append(f"Qtd ajustada: {qtd_antiga} -> {nova_qtd} ({diferenca_qtd:+}).")
+
+        if nome_antigo != novo_nome:
+            produto.nome = novo_nome
+            log_parts.append(f"Nome: '{nome_antigo}' -> '{novo_nome}'.")
+        
+        if custo_antigo != novo_custo:
+            produto.preco_custo = novo_custo
+            log_parts.append(f"Custo: R${custo_antigo:.2f} -> R${novo_custo:.2f}.")
+
+        if log_parts:
+            descricao_log = "Ajuste manual de produto. " + " ".join(log_parts)
+            
+            log_ajuste = Movimentacao(
+                produto_id=produto.id,
+                tipo='ajuste',
+                quantidade=diferenca_qtd if diferenca_qtd != 0 else None,
+                descricao=descricao_log
+            )
+            db.session.add(log_ajuste)
+        
+        db.session.commit()
+        return jsonify(produto.to_dict())
+
+    elif request.method == 'DELETE':
+        descricao_log = f"Produto '{produto.nome}' (ID: {produto.id}) foi excluído do sistema."
+        
+        log_exclusao = Movimentacao(
+            produto_id=None,
+            tipo='exclusao',
+            descricao=descricao_log
+        )
+        db.session.add(log_exclusao)
+
+        Movimentacao.query.filter_by(produto_id=produto_id).delete()
+        db.session.delete(produto)
+        db.session.commit()
+        return jsonify({'mensagem': 'Produto e seu histórico de movimentações foram excluídos com sucesso!'})
+
+
+# ===============================
 # MAIN
 # ===============================
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         adicionar_produtos_iniciais()
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)

@@ -16,13 +16,11 @@
             <i class="bi bi-list"></i>
             <span class="link-text logo-text">Meu Estoque</span>
         </div>
-
         <ul class="sidebar-links">
             <li><a href="{{ url_for('dashboard') }}"><i class="bi bi-speedometer2"></i><span class="link-text"> Dashboard</span></a></li>
             <li><a href="{{ url_for('estoque_page') }}"><i class="bi bi-box-seam"></i><span class="link-text"> Estoque</span></a></li>
             <li><a href="{{ url_for('movimentacoes_page') }}"><i class="bi bi-arrow-left-right"></i><span class="link-text"> Movimentações</span></a></li>
         </ul>
-
         <div class="sidebar-footer">
             <span class="link-text logo-text">GARRY PRO</span>
         </div>
@@ -46,5 +44,25 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <div id="edit-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <button id="modal-close-btn" class="modal-close">&times;</button>
+            <h2><i class="bi bi-pencil-square"></i> Editar Produto</h2>
+            <form id="form-edit-produto">
+                <input type="hidden" id="edit-produto-id">
+                <input type="text" id="edit-nome-produto" placeholder="Nome do Produto" required>
+                <input type="number" id="edit-qtd-produto" placeholder="Quantidade" min="0" required>
+                <small style="display: block; margin-top: -10px; margin-bottom: 10px; color: #6c757d;">
+                    Alterar a quantidade aqui registrará um ajuste de estoque.
+                </small>
+                <input type="number" id="edit-custo-produto" placeholder="Preço de Custo" step="0.01" min="0" required>
+                <button type="submit" class="btn-edit" style="width: 100%; color: white;">
+                    <i class="bi bi-check-circle"></i> Salvar Alterações
+                </button>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>
