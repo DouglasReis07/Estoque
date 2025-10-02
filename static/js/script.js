@@ -16,7 +16,7 @@ async function carregarDadosDashboard() {
 
         const spanTotalGastos = document.getElementById('card-total-gastos');
         const gastosValue = parseFloat(data.cards.total_gastos) || 0;
-        spanTotalGastos.textContent = gastosValue.toFixed(2);
+        spanTotalGastos.textContent = gastosValue.toFixed(2).replace('.', ',');
 
         if (data.grafico_movimentacoes) {
             renderizarGrafico(data.grafico_movimentacoes.labels, data.grafico_movimentacoes.data);
@@ -40,15 +40,23 @@ function renderizarGrafico(labels, data) {
             datasets: [{
                 label: 'Movimentações',
                 data,
-                backgroundColor: 'rgba(74, 144, 226, 0.6)',
-                borderColor: 'rgba(74, 144, 226, 1)',
+                backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                borderColor: 'rgba(59, 130, 246, 1)',
                 borderWidth: 1,
-                barPercentage: 0.5
+                borderRadius: 4,
+                barPercentage: 0.4 // Barras mais finas
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            // Adiciona margem interna para evitar que os textos sejam cortados
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10
+                }
+            },
             plugins: {
                 legend: { display: false }
             },
@@ -113,11 +121,11 @@ async function carregarProdutos() {
                     </div>
                     <div class="card-item">
                         <span>Custo (un.):</span>
-                        <span>R$ ${produto.preco_custo.toFixed(2)}</span>
+                        <span>R$ ${produto.preco_custo.toFixed(2).replace('.', ',')}</span>
                     </div>
                     <div class="card-item">
                         <span>Valor Total:</span>
-                        <span>R$ ${(produto.quantidade * produto.preco_custo).toFixed(2)}</span>
+                        <span>R$ ${(produto.quantidade * produto.preco_custo).toFixed(2).replace('.', ',')}</span>
                     </div>
                 </div>
                 <div class="product-card-actions">
@@ -333,12 +341,14 @@ async function excluirProduto(produto_id, produto_nome) {
 // INICIALIZAÇÃO
 // ===============================
 document.addEventListener('DOMContentLoaded', () => {
+    // Se estiver na página de estoque
     if (document.getElementById('product-cards-container')) {
         carregarProdutos();
         document.getElementById('modal-close-btn').addEventListener('click', closeEditModal);
         document.getElementById('form-edit-produto').addEventListener('submit', salvarEdicaoProduto);
     }
 
+    // Se estiver na página do dashboard
     if (document.getElementById('card-total-entradas-mes')) {
         carregarDadosDashboard();
         popularSelectProdutos();

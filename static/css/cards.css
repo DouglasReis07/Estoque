@@ -1,4 +1,4 @@
-/* Container de cards */
+/* Container de cards de produto */
 .product-cards-container {
     display: flex;
     flex-wrap: wrap;
@@ -7,53 +7,69 @@
 
 /* Card de produto */
 .product-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border: 1px solid var(--border-color); /* Usando variável global */
+    border-radius: var(--border-radius);   /* Usando variável global */
     overflow: hidden;
     width: 250px;
-    background-color: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease-in-out;
+    background-color: var(--card-bg);      /* Usando variável global */
+    box-shadow: var(--shadow);             /* Usando variável global */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-card:hover {
-    transform: scale(1.02);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
 }
 
 /* Cabeçalho do card */
 .product-header {
-    background-color: #007bff;
+    background-color: var(--primary-color); /* Usando variável global */
     color: white;
     text-align: center;
-    padding: 10px;
-    font-weight: bold;
+    padding: 12px;
+    font-weight: 600;
     font-size: 1.1rem;
 }
 
 /* Corpo do card */
 .product-body {
     padding: 15px;
+    flex-grow: 1; /* Faz o corpo ocupar o espaço disponível */
 }
 
 .card-item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
 }
+.card-item span:first-child {
+    color: var(--text-color-light);
+}
+.card-item span:last-child {
+    font-weight: 600;
+}
+
 
 /* Indicadores de estoque */
 .stock-indicator {
     font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: white;
 }
 
 .stock-high {
-    color: green;
+    background-color: var(--success-color);
 }
 
 .stock-medium {
-    color: orange;
+    background-color: #ffc107; /* Amarelo/Laranja */
+    color: var(--text-color);
 }
 
 .stock-low {
-    color: red;
+    background-color: var(--danger-color);
 }

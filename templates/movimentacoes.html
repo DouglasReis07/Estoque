@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movimentações - Controle de Estoque</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -13,7 +12,7 @@
 <body>
     <nav class="sidebar">
         <div class="sidebar-header">
-            <i class="bi bi-list"></i>
+            <i class="bi bi-box-seam"></i>
             <span class="link-text logo-text">Meu Estoque</span>
         </div>
         <ul class="sidebar-links">
@@ -27,7 +26,7 @@
     </nav>
     
     <header class="page-header">
-        <h2><i class="bi bi-arrow-left-right"></i> Movimentações</h2>
+        <h2><i class="bi bi-arrow-left-right"></i> Histórico de Movimentações</h2>
     </header>
 
     <div class="content-wrapper">
@@ -65,9 +64,9 @@
             </section>
 
             <section class="mb-4">
-                <div class="row text-center" id="cards-resumo">
+                <div class="row text-center gy-4" id="cards-resumo">
                     <div class="col-md-4">
-                        <div class="card bg-success text-white shadow">
+                        <div class="card shadow summary-card entradas">
                             <div class="card-body">
                                 <h5>Total Entradas</h5>
                                 <h3 id="card-entradas">0</h3>
@@ -75,7 +74,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card bg-danger text-white shadow">
+                        <div class="card shadow summary-card saidas">
                             <div class="card-body">
                                 <h5>Total Saídas</h5>
                                 <h3 id="card-saidas">0</h3>
@@ -83,7 +82,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card bg-warning text-dark shadow">
+                        <div class="card shadow summary-card gastos">
                             <div class="card-body">
                                 <h5>Total Gastos</h5>
                                 <h3 id="card-gastos">R$ 0,00</h3>
@@ -94,7 +93,7 @@
             </section>
 
             <section>
-                <h3 class="titulo-secao"><i class="bi bi-clock-history"></i> Histórico</h3>
+                <h3 class="titulo-secao"><i class="bi bi-clock-history"></i> Detalhes</h3>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead class="table-dark">
@@ -109,8 +108,7 @@
                             </tr>
                         </thead>
                         <tbody id="tabela-movimentacoes">
-                            <!-- preenchido via JS -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </section>
@@ -135,13 +133,13 @@
 
                 document.getElementById("card-entradas").innerText = data.cards.total_entradas;
                 document.getElementById("card-saidas").innerText = data.cards.total_saidas;
-                document.getElementById("card-gastos").innerText = "R$ " + (data.cards.total_gastos || 0).toFixed(2);
+                document.getElementById("card-gastos").innerText = "R$ " + (data.cards.total_gastos || 0).toFixed(2).replace('.', ',');
 
                 const tabela = document.getElementById("tabela-movimentacoes");
                 tabela.innerHTML = "";
 
                 if (!data.tabela.length) {
-                    tabela.innerHTML = `<tr><td colspan="7" class="text-center">Nenhuma movimentação encontrada.</td></tr>`;
+                    tabela.innerHTML = `<tr><td colspan="7" class="text-center">Nenhuma movimentação encontrada para este período.</td></tr>`;
                     return;
                 }
 
@@ -167,7 +165,7 @@
                         <td>${mov.produto_nome || "-"}</td>
                         <td>${formatarTipo(mov.tipo)}</td>
                         <td>${quantidadeCell}</td>
-                        <td>${mov.valor ? "R$ " + mov.valor.toFixed(2) : "-"}</td>
+                        <td>${mov.valor ? "R$ " + mov.valor.toFixed(2).replace('.', ',') : "-"}</td>
                         <td>${mov.descricao || "-"}</td>
                         <td>${mov.data}</td>
                     `;

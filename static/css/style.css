@@ -1,19 +1,30 @@
 @import url("sidebar.css");
 
-/* Variáveis globais para cores e tamanhos */
+/* ========================================= */
+/* VARIÁVEIS GLOBAIS (NOVA PALETA DE CORES) */
+/* ========================================= */
 :root {
-    --primary-color: #8004d3;
-    --secondary-color: #ffffff; /* Fundo da página */
-    --text-color: #333;
-    --card-bg: #ffffff; /* Card levemente translúcido */
-    --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Cores */
+    --primary-color: #3B82F6; /* Um azul moderno e agradável */
+    --primary-color-darker: #2563EB; /* Tom mais escuro para hover de botões */
+    --page-bg: #f8f9fa; /* Fundo da página em cinza muito claro */
+    --card-bg: #ffffff;
+    --text-color: #212529; /* Texto principal um pouco mais suave que preto puro */
+    --text-color-light: #6c757d; /* Texto secundário/cinza */
+    --border-color: #dee2e6; /* Cor para bordas sutis */
+    --success-color: #198754;
+    --danger-color: #dc3545;
+
+    /* Efeitos e Medidas */
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --border-radius: 8px;
+    --transition-speed: 0.2s ease; /* Transição padrão para interações */
 }
 
 /* Configurações base do corpo da página */
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(to bottom, #f1f1f1, #797878); /* gradiente de fundo */
+    background-color: var(--page-bg); /* Fundo sólido e limpo */
     color: var(--text-color);
     margin: 0;
     line-height: 1.6;
@@ -22,34 +33,33 @@ body {
     min-height: 100vh;
 }
 
-/* Novo estilo para o cabeçalho de página inteira */
+/* Cabeçalho de página inteira */
 .page-header {
     background-color: var(--primary-color);
     color: white;
     padding: 1rem 2rem;
     text-align: center;
     box-shadow: var(--shadow);
-    transition: margin-left 0.3s ease-in-out;
+    transition: margin-left var(--transition-speed);
     margin-left: var(--sidebar-collapsed-width);
     flex-shrink: 0;
 }
 
-/* O contêiner principal que envolve todo o conteúdo à direita do menu */
+/* Contêiner principal */
 .content-wrapper {
-    transition: margin-left 0.3s ease-in-out;
+    transition: margin-left var(--transition-speed);
     margin-left: var(--sidebar-collapsed-width);
     display: flex;
     flex-direction: column;
-    flex-grow: 1; 
+    flex-grow: 1;
 }
 
-/* Ajusta a margem do conteúdo E do novo header quando o menu lateral expande */
+/* Ajuste de margem quando o menu expande */
 body:has(.sidebar:hover) .content-wrapper,
 body:has(.sidebar:hover) .page-header {
     margin-left: var(--sidebar-expanded-width);
 }
 
-/* Conteúdo principal (main) */
 .content-wrapper main {
     flex: 1;
     padding: 2rem;
@@ -73,6 +83,7 @@ body:has(.sidebar:hover) .page-header {
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
+    border: 1px solid var(--border-color); /* Borda sutil */
     flex: 1;
     min-width: 250px;
     text-align: center;
@@ -80,29 +91,33 @@ body:has(.sidebar:hover) .page-header {
 
 .card h3 {
     margin-top: 0;
-    color: var(--primary-color);
+    color: var(--text-color-light); /* Cor mais suave para o título */
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .card p {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 0;
+    color: var(--primary-color); /* Destaque com a cor primária */
+}
+.card p span {
+    color: var(--text-color);
 }
 
-/* Seção principal do Dashboard */
-.main-content {
+
+/* Seção principal e Formulários */
+.main-content, .forms-section {
     display: flex;
     gap: 2rem;
     margin-bottom: 2rem;
     flex-wrap: wrap;
 }
 
-/* Seção de Formulários */
 .forms-section {
     flex: 1;
-    display: flex;
     flex-direction: column;
-    gap: 1.5rem;
     min-width: 300px;
 }
 
@@ -111,12 +126,15 @@ body:has(.sidebar:hover) .page-header {
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
 }
 
 .form-card h2, .form-card h4 {
     margin-top: 0;
-    border-bottom: 2px solid var(--secondary-color);
-    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
 }
 
 form {
@@ -127,14 +145,21 @@ form {
 
 input, select, textarea, button {
     padding: 0.8rem;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    border-radius: 6px; /* Um pouco mais arredondado */
+    border: 1px solid var(--border-color);
     font-size: 1rem;
+    transition: all var(--transition-speed);
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* Efeito de foco sutil */
 }
 
 textarea {
     resize: vertical;
-    min-height: 60px;
+    min-height: 80px;
 }
 
 button {
@@ -142,11 +167,13 @@ button {
     color: white;
     border: none;
     cursor: pointer;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 button:hover {
-    background-color: #357abd;
+    background-color: var(--primary-color-darker);
+    transform: translateY(-2px); /* Efeito de elevação sutil */
+    box-shadow: var(--shadow);
 }
 
 /* Gráfico */
@@ -156,53 +183,33 @@ button:hover {
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
     min-width: 300px;
-    position: relative;
     height: 60vh;
 }
-
-#movimentacoesChart {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* Ajuste para celular */
 @media (max-width: 768px) {
-    .chart-container {
-        height: 40vh;
-    }
+    .chart-container { height: 40vh; }
 }
 
-/* Seção de Produtos (na página de estoque) */
-.product-section h2 {
-    color: #333;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-}
 
 /* Rodapé */
 .content-wrapper footer {
-    background-color: #333;
+    background-color: #343a40; /* Cinza escuro */
     color: white;
     text-align: center;
-    padding: 1rem;
+    padding: 1.5rem;
     margin-top: auto;
 }
 
-/* Ajustes apenas para os títulos do index.html */
-.titulo-dashboard {
-    font-size: 1.6rem;
+/* Títulos da página (Dashboard e Seções) */
+.titulo-dashboard, .titulo-secao {
     font-weight: 600;
-    margin-bottom: 1rem;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.titulo-secao {
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin-bottom: 0.8rem;
-    color: #444;
-}
 
 /* === ESTILOS PARA O MODAL DE EDIÇÃO === */
 .modal-overlay {
@@ -212,7 +219,7 @@ button:hover {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
-    display: none; /* Começa escondido */
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 2000;
@@ -230,19 +237,26 @@ button:hover {
 
 .modal-content h2 {
     margin-top: 0;
+    font-weight: 600;
 }
 
 .modal-close {
     position: absolute;
     top: 15px;
     right: 15px;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     cursor: pointer;
     border: none;
     background: none;
+    line-height: 1;
+    color: var(--text-color-light);
+}
+.modal-close:hover {
+    color: var(--text-color);
 }
 
-/* === ESTILOS PARA OS BOTÕES NOS CARDS === */
+
+/* === ESTILOS PARA OS BOTÕES NOS CARDS DE PRODUTO === */
 .product-card-actions {
     display: flex;
     justify-content: flex-end;
@@ -252,37 +266,80 @@ button:hover {
 
 .btn-action {
     border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
+    padding: 6px 12px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 0.9rem;
+    font-weight: 500;
     color: white;
+    transition: all var(--transition-speed);
+}
+.btn-action:hover {
+    transform: scale(1.05);
 }
 
 .btn-edit {
-    background-color: #6c757d; /* Cinza */
+    background-color: #3B82F6; 
+}
+.btn-edit:hover {
+    background-color: #04275e;
 }
 
 .btn-delete {
-    background-color: #e74c3c; /* Vermelho */
+    background-color: var(--danger-color); /* Vermelho padronizado */
+}
+.btn-delete:hover {
+    background-color: #c82333;
 }
 
-/* =================================== */
-/* CORREÇÃO DE VISIBILIDADE DO MODAL */
-/* =================================== */
-.modal-content form input {
-    background-color: #ffffff;
-    color: #333;
-    border: 1px solid #ccc;
-    width: 100%;
-    box-sizing: border-box;
+/* ================================================= */
+/* ESTILOS PARA OS CARDS DE RESUMO EM MOVIMENTAÇÕES  */
+/* ================================================= */
+
+.summary-card {
+    border-top: 5px solid; /* Cria a base para a borda colorida no topo */
+    background-color: var(--card-bg);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
 }
 
-.modal-content form button.btn-edit {
-    background-color: #0d6efd; /* Azul */
-    color: white;
+.summary-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
 }
 
-.modal-content form button.btn-edit:hover {
-    background-color: #0b5ed7; /* Azul mais escuro */
+.summary-card h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color-light); /* Cinza para o título */
+    margin-bottom: 0.5rem;
+}
+
+.summary-card h3 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Define as cores específicas para cada card */
+
+.summary-card.entradas {
+    border-top-color: var(--success-color); /* Verde */
+}
+.summary-card.entradas h3 {
+    color: var(--success-color);
+}
+
+
+.summary-card.saidas {
+    border-top-color: var(--danger-color); /* Vermelho */
+}
+.summary-card.saidas h3 {
+    color: var(--danger-color);
+}
+
+.summary-card.gastos {
+    border-top-color: #ffc107; /* Amarelo/Laranja */
+}
+.summary-card.gastos h3 {
+    color: #ffc107;
 }

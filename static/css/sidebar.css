@@ -1,7 +1,7 @@
 :root {
-    --sidebar-bg-color: #2c3e50;
-    --sidebar-text-color: #ecf0f1;
-    --sidebar-hover-bg: #34495e;
+    --sidebar-bg-color: #111827; /* Um cinza quase preto, muito moderno */
+    --sidebar-text-color: #e5e7eb;
+    --sidebar-hover-bg: #1f2937;
     --sidebar-collapsed-width: 80px;
     --sidebar-expanded-width: 250px;
 }
@@ -14,8 +14,10 @@
     background-color: var(--sidebar-bg-color);
     color: var(--sidebar-text-color);
     z-index: 1000;
-    transition: width 0.3s ease-in-out;
+    transition: width 0.2s ease-in-out;
     width: var(--sidebar-collapsed-width);
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar:hover {
@@ -29,7 +31,7 @@
     overflow: hidden;
 }
 
-.sidebar-header svg {
+.sidebar-header svg, .sidebar-header .bi {
     min-width: 35px;
     width: 35px;
     height: 35px;
@@ -40,6 +42,7 @@
     padding: 0;
     margin: 0;
     overflow: hidden;
+    flex-grow: 1;
 }
 
 .sidebar-links li a {
@@ -49,14 +52,17 @@
     color: var(--sidebar-text-color);
     text-decoration: none;
     white-space: nowrap;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border-left: 4px solid transparent; /* Espaço para o indicador de hover */
 }
 
 .sidebar-links li a:hover {
     background-color: var(--sidebar-hover-bg);
+    color: #ffffff;
+    border-left-color: var(--primary-color); /* Destaque azul ao passar o mouse */
 }
 
-.sidebar-links li a svg {
+.sidebar-links li a svg, .sidebar-links li a .bi {
     min-width: 30px;
     width: 30px;
     height: 30px;
@@ -75,24 +81,18 @@
     transition-delay: 0.1s;
 }
 
-.sidebar {
-    display: flex;
-    flex-direction: column;
-}
-
-.sidebar-links {
-    flex-grow: 1; /* Ocupa todo o espaço disponível, empurrando o footer para baixo */
-}
-
 .sidebar-footer {
-    padding: 1rem;
+    padding: 1.5rem 1rem;
     text-align: center;
-    border-top: 1px solid #34495e; /* opcional, apenas para separar */
+    border-top: 1px solid #34495e;
 }
 
+/* ========================================= */
+/* AJUSTE PARA MANTER O NOME DO PROJETO VISÍVEL */
+/* ========================================= */
 .sidebar-footer .link-text {
-    opacity: 1; /* garante que o nome sempre apareça */
+    /* Sobrepõe a regra geral para manter o texto sempre visível */
+    opacity: 1;
     visibility: visible;
     font-weight: bold;
-    color: #ecf0f1;
 }
