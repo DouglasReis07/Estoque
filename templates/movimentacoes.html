@@ -21,6 +21,12 @@
             <li><a href="{{ url_for('movimentacoes_page') }}"> <i class="bi bi-arrow-left-right"> </i><span class="link-text"> Movimentações </span></a></li>
         </ul>
         <div class="sidebar-footer">
+            <div class="link-text">
+                <div class="dark-mode-toggle">
+                    <input type="checkbox" id="dark-mode-checkbox">
+                    <label for="dark-mode-checkbox"></label>
+                </div>
+            </div>
             <span class="link-text logo-text">GARRY PRO</span>
         </div>
     </nav>
@@ -180,5 +186,6 @@
         document.addEventListener("DOMContentLoaded", carregarMovimentacoes);
     </script>
     
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

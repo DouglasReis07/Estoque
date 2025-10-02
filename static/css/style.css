@@ -1,7 +1,7 @@
 @import url("sidebar.css");
 
 /* ========================================= */
-/* VARIÁVEIS GLOBAIS (NOVA PALETA DE CORES) */
+/* VARIÁVEIS GLOBAIS (TEMA CLARO - PADRÃO)   */
 /* ========================================= */
 :root {
     /* Cores */
@@ -20,6 +20,24 @@
     --border-radius: 8px;
     --transition-speed: 0.2s ease; /* Transição padrão para interações */
 }
+
+/* ========================================= */
+/* VARIÁVEIS PARA O DARK MODE              */
+/* ========================================= */
+body.dark-mode {
+    --page-bg: #111827;             /* Fundo da página bem escuro */
+    --card-bg: #1f2937;              /* Fundo dos cards um pouco mais claro */
+    --text-color: #e5e7eb;            /* Texto principal claro */
+    --text-color-light: #9ca3af;      /* Texto secundário/cinza */
+    --border-color: #374151;          /* Cor das bordas escuras */
+    --primary-color-darker: #1D4ED8;  /* Tom mais escuro do azul para hover */
+}
+
+/* Ajuste sutil na cor do gráfico para o modo escuro */
+body.dark-mode .chart-container {
+    background-color: #1f2937;
+}
+
 
 /* Configurações base do corpo da página */
 body {
@@ -145,16 +163,18 @@ form {
 
 input, select, textarea, button {
     padding: 0.8rem;
-    border-radius: 6px; /* Um pouco mais arredondado */
+    border-radius: 6px;
     border: 1px solid var(--border-color);
     font-size: 1rem;
     transition: all var(--transition-speed);
+    background-color: var(--card-bg); /* Garante que os inputs também mudem de cor */
+    color: var(--text-color); /* Garante que o texto dos inputs também mude de cor */
 }
 
 input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* Efeito de foco sutil */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
 }
 
 textarea {
@@ -172,7 +192,7 @@ button {
 
 button:hover {
     background-color: var(--primary-color-darker);
-    transform: translateY(-2px); /* Efeito de elevação sutil */
+    transform: translateY(-2px);
     box-shadow: var(--shadow);
 }
 
@@ -194,14 +214,14 @@ button:hover {
 
 /* Rodapé */
 .content-wrapper footer {
-    background-color: #343a40; /* Cinza escuro */
+    background-color: #343a40;
     color: white;
     text-align: center;
     padding: 1.5rem;
     margin-top: auto;
 }
 
-/* Títulos da página (Dashboard e Seções) */
+/* Títulos da página */
 .titulo-dashboard, .titulo-secao {
     font-weight: 600;
     color: var(--text-color);
@@ -226,13 +246,14 @@ button:hover {
 }
 
 .modal-content {
-    background: white;
+    background: var(--card-bg); /* Modal também obedece ao tema */
     padding: 2rem;
     border-radius: var(--border-radius);
     width: 90%;
     max-width: 500px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     position: relative;
+    border: 1px solid var(--border-color);
 }
 
 .modal-content h2 {
@@ -279,14 +300,14 @@ button:hover {
 }
 
 .btn-edit {
-    background-color: #3B82F6; 
+    background-color: #3B82F6;
 }
 .btn-edit:hover {
-    background-color: #04275e;
+    background-color: #002c4e;
 }
 
 .btn-delete {
-    background-color: var(--danger-color); /* Vermelho padronizado */
+    background-color: var(--danger-color);
 }
 .btn-delete:hover {
     background-color: #c82333;
@@ -295,9 +316,8 @@ button:hover {
 /* ================================================= */
 /* ESTILOS PARA OS CARDS DE RESUMO EM MOVIMENTAÇÕES  */
 /* ================================================= */
-
 .summary-card {
-    border-top: 5px solid; /* Cria a base para a borda colorida no topo */
+    border-top: 5px solid;
     background-color: var(--card-bg);
     transition: transform var(--transition-speed), box-shadow var(--transition-speed);
 }
@@ -310,7 +330,7 @@ button:hover {
 .summary-card h5 {
     font-size: 1rem;
     font-weight: 600;
-    color: var(--text-color-light); /* Cinza para o título */
+    color: var(--text-color-light);
     margin-bottom: 0.5rem;
 }
 
@@ -320,26 +340,101 @@ button:hover {
     margin: 0;
 }
 
-/* Define as cores específicas para cada card */
-
 .summary-card.entradas {
-    border-top-color: var(--success-color); /* Verde */
+    border-top-color: var(--success-color);
 }
 .summary-card.entradas h3 {
     color: var(--success-color);
 }
 
-
 .summary-card.saidas {
-    border-top-color: var(--danger-color); /* Vermelho */
+    border-top-color: var(--danger-color);
 }
 .summary-card.saidas h3 {
     color: var(--danger-color);
 }
 
 .summary-card.gastos {
-    border-top-color: #ffc107; /* Amarelo/Laranja */
+    border-top-color: #ffc107;
 }
 .summary-card.gastos h3 {
     color: #ffc107;
+}
+
+/* ========================================= */
+/* ESTILOS PARA O BOTÃO DARK MODE TOGGLE     */
+/* ========================================= */
+.dark-mode-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.dark-mode-toggle input[type="checkbox"] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+
+.dark-mode-toggle label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 50px;
+    height: 25px;
+    background: #4b5563; /* Cor do toggle desligado */
+    display: block;
+    border-radius: 100px;
+    position: relative;
+}
+
+/* Círculo do toggle */
+.dark-mode-toggle label:after {
+    content: '';
+    position: absolute;
+    top: 2.5px;
+    left: 2.5px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 90px;
+    transition: 0.3s;
+}
+
+/* Quando o checkbox está marcado (ativo) */
+.dark-mode-toggle input:checked + label {
+    background: var(--primary-color); /* Cor do toggle ligado */
+}
+
+/* Movimento do círculo */
+.dark-mode-toggle input:checked + label:after {
+    left: calc(100% - 2.5px);
+    transform: translateX(-100%);
+}
+
+.dark-mode-toggle label:active:after {
+    width: 30px;
+}
+
+/* ================================================= */
+/* AJUSTES PARA BOOTSTRAP EM DARK MODE (MOVIMENTAÇÕES) */
+/* ================================================= */
+body.dark-mode .table {
+    --bs-table-color: var(--text-color);
+    --bs-table-bg: var(--card-bg);
+    --bs-table-border-color: var(--border-color);
+    --bs-table-striped-color: var(--text-color);
+    --bs-table-striped-bg: #2c3748; /* Cor um pouco diferente para as linhas listradas */
+}
+
+body.dark-mode .form-control, body.dark-mode .form-select {
+    background-color: #374151;
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+body.dark-mode .table-dark {
+    --bs-table-color: #fff;
+    --bs-table-bg: #374151;
+    --bs-table-border-color: #4b5563;
 }

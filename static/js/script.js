@@ -54,7 +54,8 @@ function renderizarGrafico(labels, data) {
             layout: {
                 padding: {
                     left: 10,
-                    right: 10
+                    right: 10,
+                    bottom: 30 // ALTERADO: Margem inferior aumentada para garantir o espaço
                 }
             },
             plugins: {
@@ -70,10 +71,11 @@ function renderizarGrafico(labels, data) {
                 x: {
                     ticks: {
                         font: {
-                            size: 10
+                            size: 9 // ALTERADO: Fonte ligeiramente menor
                         },
                         maxRotation: 45,
-                        minRotation: 45
+                        minRotation: 45,
+                        padding: 10 // NOVO: Adiciona um espaçamento entre o texto e o eixo
                     }
                 }
             }
@@ -341,6 +343,38 @@ async function excluirProduto(produto_id, produto_nome) {
 // INICIALIZAÇÃO
 // ===============================
 document.addEventListener('DOMContentLoaded', () => {
+
+    // --- LÓGICA DO DARK MODE ---
+    const darkModeToggle = document.getElementById('dark-mode-checkbox');
+    const body = document.body;
+
+    // Função para aplicar o tema
+    const applyTheme = (theme) => {
+        if (theme === 'dark') {
+            body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        } else {
+            body.classList.remove('dark-mode');
+            darkModeToggle.checked = false;
+        }
+    };
+
+    // Verifica o tema salvo no localStorage ao carregar a página
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
+    // Listener para o clique no botão
+    darkModeToggle.addEventListener('change', () => {
+        let newTheme = 'light';
+        if (darkModeToggle.checked) {
+            newTheme = 'dark';
+        }
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
+    });
+    // --- FIM DA LÓGICA DO DARK MODE ---
+
+
     // Se estiver na página de estoque
     if (document.getElementById('product-cards-container')) {
         carregarProdutos();
