@@ -22,7 +22,6 @@ O GARRY PRO foi construído com um conjunto robusto de funcionalidades para uma 
 * **📊 Dashboard Inteligente:**
     * Resumo mensal de entradas, saídas e gastos.
     * Gráfico de barras com os produtos mais movimentados.
-    * Gráfico de pizza comparando o volume de entradas vs. saídas.
 * **📜 Histórico Completo:** Uma página dedicada para visualizar e filtrar todas as movimentações por mês e ano.
 * **🕵️ Rastreabilidade:** Todas as movimentações e ajustes registram o nome do usuário que realizou a ação na descrição.
 
@@ -104,6 +103,6 @@ Para rodar o GARRY PRO em sua máquina local, siga os passos abaixo.
 
 4.  **Faça o login:**
     Use uma das credenciais padrão:
-    * **Usuário:** `Teste` / **Senha:** `teste`
+    * **Usuário:** `Teste` / **Senha:** `123`
 
 ---
