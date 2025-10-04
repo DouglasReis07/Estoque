@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -27,13 +26,34 @@
             <li><a href="{{ url_for('movimentacoes_page') }}"><i class="bi bi-arrow-left-right"></i><span class="link-text"> Movimentações</span></a></li>
         </ul>
         <div class="sidebar-footer">
-            <div class="link-text">
-                <div class="dark-mode-toggle">
-                    <input type="checkbox" id="dark-mode-checkbox">
-                    <label for="dark-mode-checkbox"></label>
+            <div class="user-menu" id="user-menu">
+                <div class="user-info" id="user-menu-trigger">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="link-text">{{ current_user.nome }}</span>
+                    </div>
+                    <i class="bi bi-chevron-up user-menu-arrow link-text"></i>
+                </div>
+                <div class="user-dropdown" id="user-dropdown-menu">
+                    <ul>
+                        <li>
+                            <span style="display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="bi bi-moon-stars-fill"></i> Modo Escuro
+                            </span>
+                            <div class="dark-mode-toggle">
+                                <input type="checkbox" id="dark-mode-checkbox">
+                                <label for="dark-mode-checkbox"></label>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('logout') }}">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Sair
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <span class="link-text logo-text">GARRY PRO</span>
         </div>
     </nav>
 
@@ -54,14 +74,14 @@
                     <div class="form-card">
                         <h4><i class="bi bi-exclamation-triangle-fill"></i> Alertas de Estoque Baixo</h4>
                         <ul id="lista-alertas-estoque" style="list-style: none; padding: 0; margin: 0;">
-                            </ul>
+                        </ul>
                     </div>
                     <div class="form-card">
                         <h4><i class="bi bi-plus-circle"></i> Adicionar Novo Produto</h4>
                         <form id="form-add-produto">
                             <input type="text" id="nome-produto" placeholder="Nome do Produto" required>
-                            <input type="number" id="qtd-produto" placeholder="Quantidade Inicial" min="0" value="0" required>
-                            <input type="number" id="custo-produto" placeholder="Preço de Custo" step="0.01" min="0" value="0" required>
+                            <input type="number" id="qtd-produto" placeholder="Quantidade Inicial" min="0" required>
+                            <input type="number" id="custo-produto" placeholder="Preço de Custo" step="0.01" min="0" required>
                             <button type="submit"><i class="bi bi-check-circle"></i> Adicionar Produto</button>
                         </form>
                     </div>

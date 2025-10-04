@@ -102,6 +102,9 @@ function renderizarGrafico(labels, data) {
     if (movimentacoesChart) {
         movimentacoesChart.destroy();
     }
+
+    const textColor = document.body.classList.contains('dark-mode') ? '#e5e7eb' : '#6c757d';
+
     movimentacoesChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -113,7 +116,8 @@ function renderizarGrafico(labels, data) {
                 borderColor: 'rgba(59, 130, 246, 1)',
                 borderWidth: 1,
                 borderRadius: 4,
-                barPercentage: 0.4
+                barPercentage: 0.6,
+                categoryPercentage: 0.7
             }]
         },
         options: {
@@ -122,8 +126,8 @@ function renderizarGrafico(labels, data) {
             layout: { padding: { left: 10, right: 10, bottom: 30 }},
             plugins: { legend: { display: false }},
             scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 1, color: document.body.classList.contains('dark-mode') ? '#e5e7eb' : '#6c757d' }},
-                x: { ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 45, padding: 10, color: document.body.classList.contains('dark-mode') ? '#e5e7eb' : '#6c757d' }}
+                y: { beginAtZero: true, ticks: { stepSize: 1, color: textColor }},
+                x: { ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 45, padding: 10, color: textColor }}
             }
         }
     });
@@ -374,11 +378,103 @@ async function excluirProduto(produto_id, produto_nome) {
 }
 
 // ===============================
+// MOVIMENTAÇÕES (PÁGINA DEDICADA)
+// ===============================
+async function carregarMovimentacoes() {
+    const mes = document.getElementById('filtro-mes')?.value;
+    const ano = document.getElementById('filtro-ano')?.value;
+    
+    let url = `${API_URL}/movimentacoes`;
+    if (mes && ano) {
+        url += `?mes=${mes}&ano=${ano}`;
+    }
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Erro ao buscar movimentações");
+        const data = await response.json();
+
+        document.getElementById('mov-card-total-entradas').textContent = data.cards.total_entradas ?? 0;
+        document.getElementById('mov-card-total-saidas').textContent = data.cards.total_saidas ?? 0;
+        document.getElementById('mov-card-total-gastos').textContent = `R$ ${(data.cards.total_gastos || 0).toFixed(2).replace('.', ',')}`;
+
+        const tbody = document.getElementById('tabela-movimentacoes').querySelector('tbody');
+        tbody.innerHTML = '';
+
+        if (!data.tabela.length) {
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center">Nenhuma movimentação encontrada para o período.</td></tr>`;
+            return;
+        }
+        
+        const formatarTipo = (tipo) => {
+            switch (tipo) {
+                case 'entrada': return '<span class="badge bg-success">Entrada</span>';
+                case 'saida': return '<span class="badge bg-danger">Saída</span>';
+                case 'gasto': return '<span class="badge bg-warning text-dark">Gasto</span>';
+                case 'ajuste': return '<span class="badge bg-primary">Ajuste</span>';
+                case 'exclusao': return '<span class="badge bg-dark">Exclusão</span>';
+                default: return tipo;
+            }
+        };
+
+        data.tabela.forEach(mov => {
+            const tr = document.createElement('tr');
+            
+            const quantidadeCell = mov.tipo === 'ajuste' && mov.quantidade != null 
+                ? (mov.quantidade > 0 ? `+${mov.quantidade}` : mov.quantidade) 
+                : (mov.quantidade ?? "-");
+
+            tr.innerHTML = `
+                <td>${mov.data}</td>
+                <td>${mov.produto_nome || "-"}</td>
+                <td>${formatarTipo(mov.tipo)}</td>
+                <td>${quantidadeCell}</td>
+                <td>${mov.valor ? "R$ " + mov.valor.toFixed(2).replace('.', ',') : "-"}</td>
+                <td>${mov.descricao || "-"}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+    } catch (error) {
+        console.error('Erro ao carregar movimentações:', error);
+        showToast('Não foi possível carregar as movimentações.', 'error');
+    }
+}
+
+function preencherFiltrosMesAno() {
+    const filtroMes = document.getElementById('filtro-mes');
+    const filtroAno = document.getElementById('filtro-ano');
+    const agora = new Date();
+    const mesAtual = agora.getMonth() + 1;
+    const anoAtual = agora.getFullYear();
+
+    if (filtroMes) {
+        for (let i = 1; i <= 12; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = new Date(2000, i - 1, 1).toLocaleString('pt-BR', { month: 'long' });
+            filtroMes.appendChild(option);
+        }
+        filtroMes.value = mesAtual;
+    }
+
+    if (filtroAno) {
+        for (let i = anoAtual; i >= anoAtual - 5; i--) { // Últimos 6 anos
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            filtroAno.appendChild(option);
+        }
+        filtroAno.value = anoAtual;
+    }
+}
+
+
+// ===============================
 // INICIALIZAÇÃO
 // ===============================
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- LÓGICA DO DARK MODE ---
     const darkModeToggle = document.getElementById('dark-mode-checkbox');
     const body = document.body;
     const applyTheme = (theme) => {
@@ -397,24 +493,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     const savedTheme = localStorage.getItem('theme') || 'light';
-    applyTheme(savedTheme);
+    if(darkModeToggle) {
+        applyTheme(savedTheme);
+        darkModeToggle.addEventListener('change', () => {
+            const newTheme = darkModeToggle.checked ? 'dark' : 'light';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+    }
 
-    darkModeToggle.addEventListener('change', () => {
-        const newTheme = darkModeToggle.checked ? 'dark' : 'light';
-        localStorage.setItem('theme', newTheme);
-        applyTheme(newTheme);
-    });
-    // --- FIM DA LÓGICA DO DARK MODE ---
+    const userMenu = document.getElementById('user-menu');
+    const userMenuTrigger = document.getElementById('user-menu-trigger');
+    const userDropdownMenu = document.getElementById('user-dropdown-menu');
+    if (userMenu && userMenuTrigger && userDropdownMenu) {
+        userMenuTrigger.addEventListener('click', (event) => {
+            event.stopPropagation();
+            userMenu.classList.toggle('open');
+            const isVisible = userDropdownMenu.style.display === 'block';
+            userDropdownMenu.style.display = isVisible ? 'none' : 'block';
+        });
+        window.addEventListener('click', function(e) {
+            if (userMenu && !userMenu.contains(e.target)) {
+                userDropdownMenu.style.display = 'none';
+                userMenu.classList.remove('open');
+            }
+        });
+    }
 
-
-    // Se estiver na página de estoque
     if (document.getElementById('product-cards-container')) {
         carregarProdutos();
         document.getElementById('modal-close-btn').addEventListener('click', closeEditModal);
         document.getElementById('form-edit-produto').addEventListener('submit', salvarEdicaoProduto);
     }
 
-    // Se estiver na página do dashboard
     if (document.getElementById('card-total-entradas-mes')) {
         carregarDadosDashboard();
         popularSelectProdutos();
@@ -423,8 +534,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('form-gasto')?.addEventListener('submit', registrarGasto);
     }
     
-    // Se estiver na página de movimentações
     if (document.getElementById('tabela-movimentacoes')) {
+        preencherFiltrosMesAno();
         carregarMovimentacoes();
+        document.getElementById('filtro-mes').addEventListener('change', carregarMovimentacoes);
+        document.getElementById('filtro-ano').addEventListener('change', carregarMovimentacoes);
     }
 });

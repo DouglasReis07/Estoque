@@ -5,44 +5,40 @@
 /* ========================================= */
 :root {
     /* Cores */
-    --primary-color: #3B82F6; /* Um azul moderno e agradável */
-    --primary-color-darker: #2563EB; /* Tom mais escuro para hover de botões */
-    --page-bg: #f8f9fa; /* Fundo da página em cinza muito claro */
+    --primary-color: #3B82F6;
+    --primary-color-darker: #2563EB;
+    --page-bg: #f8f9fa;
     --card-bg: #ffffff;
-    --text-color: #212529; /* Texto principal um pouco mais suave que preto puro */
-    --text-color-light: #6c757d; /* Texto secundário/cinza */
-    --border-color: #dee2e6; /* Cor para bordas sutis */
+    --text-color: #212529;
+    --text-color-light: #6c757d;
+    --border-color: #dee2e6;
     --success-color: #198754;
     --danger-color: #dc3545;
-
-    /* Efeitos e Medidas */
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --border-radius: 8px;
-    --transition-speed: 0.2s ease; /* Transição padrão para interações */
+    --transition-speed: 0.2s ease;
 }
 
 /* ========================================= */
 /* VARIÁVEIS PARA O DARK MODE              */
 /* ========================================= */
 body.dark-mode {
-    --page-bg: #111827;             /* Fundo da página bem escuro */
-    --card-bg: #1f2937;              /* Fundo dos cards um pouco mais claro */
-    --text-color: #e5e7eb;            /* Texto principal claro */
-    --text-color-light: #9ca3af;      /* Texto secundário/cinza */
-    --border-color: #374151;          /* Cor das bordas escuras */
-    --primary-color-darker: #1D4ED8;  /* Tom mais escuro do azul para hover */
+    --page-bg: #111827;
+    --card-bg: #1f2937;
+    --text-color: #e5e7eb;
+    --text-color-light: #9ca3af;
+    --border-color: #374151;
+    --primary-color-darker: #1D4ED8;
 }
 
-/* Ajuste sutil na cor do gráfico para o modo escuro */
 body.dark-mode .chart-container {
     background-color: #1f2937;
 }
 
-
 /* Configurações base do corpo da página */
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: var(--page-bg); /* Fundo sólido e limpo */
+    background-color: var(--page-bg);
     color: var(--text-color);
     margin: 0;
     line-height: 1.6;
@@ -63,15 +59,14 @@ body {
     flex-shrink: 0;
 }
 
-/* NOVO: Estilo padronizado para o título H2 dentro do cabeçalho */
 .page-header h2 {
-    font-size: 1.8rem; /* Tamanho da fonte padronizado */
-    font-weight: 600;  /* Peso da fonte */
-    margin: 0;         /* Remove margens padrão do h2 */
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;      /* Espaço entre o ícone e o texto */
+    gap: 0.75rem;
 }
 
 /* Contêiner principal */
@@ -83,7 +78,6 @@ body {
     flex-grow: 1;
 }
 
-/* Ajuste de margem quando o menu expande */
 body:has(.sidebar:hover) .content-wrapper,
 body:has(.sidebar:hover) .page-header {
     margin-left: var(--sidebar-expanded-width);
@@ -112,7 +106,7 @@ body:has(.sidebar:hover) .page-header {
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
-    border: 1px solid var(--border-color); /* Borda sutil */
+    border: 1px solid var(--border-color);
     flex: 1;
     min-width: 250px;
     text-align: center;
@@ -120,7 +114,7 @@ body:has(.sidebar:hover) .page-header {
 
 .card h3 {
     margin-top: 0;
-    color: var(--text-color-light); /* Cor mais suave para o título */
+    color: var(--text-color-light);
     font-size: 1rem;
     font-weight: 600;
 }
@@ -129,24 +123,26 @@ body:has(.sidebar:hover) .page-header {
     font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 0;
-    color: var(--primary-color); /* Destaque com a cor primária */
+    color: var(--primary-color);
 }
 .card p span {
     color: var(--text-color);
 }
 
-
 /* Seção principal e Formulários */
-.main-content, .forms-section {
+.main-content {
     display: flex;
     gap: 2rem;
     margin-bottom: 2rem;
     flex-wrap: wrap;
+    align-items: flex-start;
 }
 
 .forms-section {
     flex: 1;
+    display: flex;
     flex-direction: column;
+    gap: 2rem;
     min-width: 300px;
 }
 
@@ -178,8 +174,8 @@ input, select, textarea, button {
     border: 1px solid var(--border-color);
     font-size: 1rem;
     transition: all var(--transition-speed);
-    background-color: var(--card-bg); /* Garante que os inputs também mudem de cor */
-    color: var(--text-color); /* Garante que o texto dos inputs também mude de cor */
+    background-color: var(--card-bg);
+    color: var(--text-color);
 }
 
 input:focus, select:focus, textarea:focus {
@@ -209,19 +205,18 @@ button:hover {
 
 /* Gráfico */
 .chart-container {
-    flex: 1.5;
     background: var(--card-bg);
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     border: 1px solid var(--border-color);
     min-width: 300px;
+    position: relative;
+}
+.main-content .chart-container {
+    flex: 1.5;
     height: 60vh;
 }
-@media (max-width: 768px) {
-    .chart-container { height: 40vh; }
-}
-
 
 /* Rodapé */
 .content-wrapper footer {
@@ -257,7 +252,7 @@ button:hover {
 }
 
 .modal-content {
-    background: var(--card-bg); /* Modal também obedece ao tema */
+    background: var(--card-bg);
     padding: 2rem;
     border-radius: var(--border-radius);
     width: 90%;
@@ -393,13 +388,12 @@ button:hover {
     text-indent: -9999px;
     width: 50px;
     height: 25px;
-    background: #4b5563; /* Cor do toggle desligado */
+    background: #4b5563;
     display: block;
     border-radius: 100px;
     position: relative;
 }
 
-/* Círculo do toggle */
 .dark-mode-toggle label:after {
     content: '';
     position: absolute;
@@ -412,12 +406,10 @@ button:hover {
     transition: 0.3s;
 }
 
-/* Quando o checkbox está marcado (ativo) */
 .dark-mode-toggle input:checked + label {
-    background: var(--primary-color); /* Cor do toggle ligado */
+    background: var(--primary-color);
 }
 
-/* Movimento do círculo */
 .dark-mode-toggle input:checked + label:after {
     left: calc(100% - 2.5px);
     transform: translateX(-100%);
@@ -435,7 +427,7 @@ body.dark-mode .table {
     --bs-table-bg: var(--card-bg);
     --bs-table-border-color: var(--border-color);
     --bs-table-striped-color: var(--text-color);
-    --bs-table-striped-bg: #2c3748; /* Cor um pouco diferente para as linhas listradas */
+    --bs-table-striped-bg: #2c3748;
 }
 
 body.dark-mode .form-control, body.dark-mode .form-select {
@@ -450,17 +442,6 @@ body.dark-mode .table-dark {
     --bs-table-border-color: #4b5563;
 }
 
-/* ================================================= */
-/* CORREÇÕES FINAIS PARA BOOTSTRAP EM DARK MODE      */
-/* ================================================= */
-
-/* Força os inputs de filtro a usarem o fundo correto */
-body.dark-mode .form-control, 
-body.dark-mode .form-select {
-    background-color: #374151 !important;
-}
-
-/* Estilo do botão "Filtrar" */
 body.dark-mode .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
@@ -472,7 +453,6 @@ body.dark-mode .btn-primary:hover {
     border-color: var(--primary-color-darker);
 }
 
-/* Estilos dos Badges coloridos na tabela */
 body.dark-mode .badge.bg-success {
     background-color: #166534 !important;
     color: #dcfce7;
@@ -496,4 +476,86 @@ body.dark-mode .badge.bg-primary {
 body.dark-mode .badge.bg-dark {
     background-color: #4b5563 !important;
     color: #d1d5db;
+}
+
+/* ========================================= */
+/* ESTILOS DA PÁGINA DE LOGIN                */
+/* ========================================= */
+body.login-page {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #3B82F6 100%);
+    overflow: hidden;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    --card-bg: transparent;
+}
+
+.login-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #ffffff;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+.login-title .bi {
+    font-size: 2rem;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.input-group .bi {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+}
+
+.login-card input {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding-left: 45px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.login-card input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.login-card input:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: #ffffff;
+}
+
+.login-card button {
+    width: 100%;
+}
+
+.login-page .alert {
+    background-color: rgba(220, 53, 69, 0.8);
+    color: white;
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
