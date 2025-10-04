@@ -71,12 +71,9 @@ def adicionar_dados_iniciais():
     with app.app_context():
         db.create_all()
         if User.query.count() == 0:
-            user1 = User(username='Douglas', nome='Douglas Reis', email='douglas@email.com')
+            user1 = User(username='Teste', nome='Teste', email='teste@email.com')
             user1.set_password('123')
-            user2 = User(username='teste', nome='Teste', email='admin@email.com')
-            user2.set_password('teste')
             db.session.add(user1)
-            db.session.add(user2)
             print("Usuários iniciais criados.")
 
         if Produto.query.count() == 0:
