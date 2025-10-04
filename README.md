@@ -6,8 +6,6 @@
 
 Um sistema web completo e moderno para controle de estoque, desenvolvido para ser simples, rápido e visualmente agradável.
 
-![Screenshot do Dashboard](link-para-seu-screenshot.png)
-*(Dica: Tire um screenshot do seu dashboard e substitua este link)*
 
 ## ✨ Funcionalidades Principais
 
@@ -106,7 +104,6 @@ Para rodar o GARRY PRO em sua máquina local, siga os passos abaixo.
 
 4.  **Faça o login:**
     Use uma das credenciais padrão:
-    * **Usuário:** `admin` / **Senha:** `admin`
-
+    * **Usuário:** `Teste` / **Senha:** `teste`
 
 ---
