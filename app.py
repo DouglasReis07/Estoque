@@ -2,7 +2,7 @@ import os
 from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, date
 from sqlalchemy import func
 from pytz import timezone
 
@@ -194,7 +194,7 @@ def movimentacoes():
 
 
 # ===============================
-# API DASHBOARD
+# API DASHBOARD (Versão com Alertas de Estoque)
 # ===============================
 @app.route('/api/dashboard', methods=['GET'])
 def get_dashboard_data():
@@ -214,6 +214,8 @@ def get_dashboard_data():
     ).join(Movimentacao).group_by(Produto.nome)\
      .order_by(db.desc('total_mov')).limit(5).all()
     
+    produtos_estoque_baixo = Produto.query.filter(Produto.quantidade <= 10).order_by(Produto.quantidade).all()
+    
     return jsonify({
         'cards': {
             'total_entradas_mes': total_entradas_mes,  
@@ -223,7 +225,8 @@ def get_dashboard_data():
         'grafico_movimentacoes': {
             'labels': [row[0] for row in produtos_mais_movimentados],
             'data': [row[1] for row in produtos_mais_movimentados]
-        }
+        },
+        'alertas_estoque': [p.to_dict() for p in produtos_estoque_baixo]
     })
 
 

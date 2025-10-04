@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estoque - Controle de Estoque</title>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
@@ -30,11 +35,9 @@
             <span class="link-text logo-text">GARRY PRO</span>
         </div>
     </nav>
-
     <header class="page-header">
         <h2><i class="bi bi-boxes"></i> Estoque Atual</h2>
     </header>
-
     <div class="content-wrapper">
         <main>
             <section class="product-section">
@@ -46,7 +49,6 @@
             <p><i class="bi bi-box-seam"></i> GARRY PRO - Sistema de Controle de Estoque &copy; 2025</p>
         </footer>
     </div>
-
     <div id="edit-modal-overlay" class="modal-overlay">
         <div class="modal-content">
             <button id="modal-close-btn" class="modal-close">&times;</button>
@@ -65,7 +67,6 @@
             </form>
         </div>
     </div>
-    
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

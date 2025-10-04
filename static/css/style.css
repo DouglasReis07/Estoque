@@ -63,6 +63,17 @@ body {
     flex-shrink: 0;
 }
 
+/* NOVO: Estilo padronizado para o título H2 dentro do cabeçalho */
+.page-header h2 {
+    font-size: 1.8rem; /* Tamanho da fonte padronizado */
+    font-weight: 600;  /* Peso da fonte */
+    margin: 0;         /* Remove margens padrão do h2 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;      /* Espaço entre o ícone e o texto */
+}
+
 /* Contêiner principal */
 .content-wrapper {
     transition: margin-left var(--transition-speed);
@@ -437,4 +448,52 @@ body.dark-mode .table-dark {
     --bs-table-color: #fff;
     --bs-table-bg: #374151;
     --bs-table-border-color: #4b5563;
+}
+
+/* ================================================= */
+/* CORREÇÕES FINAIS PARA BOOTSTRAP EM DARK MODE      */
+/* ================================================= */
+
+/* Força os inputs de filtro a usarem o fundo correto */
+body.dark-mode .form-control, 
+body.dark-mode .form-select {
+    background-color: #374151 !important;
+}
+
+/* Estilo do botão "Filtrar" */
+body.dark-mode .btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+body.dark-mode .btn-primary:hover {
+    background-color: var(--primary-color-darker);
+    border-color: var(--primary-color-darker);
+}
+
+/* Estilos dos Badges coloridos na tabela */
+body.dark-mode .badge.bg-success {
+    background-color: #166534 !important;
+    color: #dcfce7;
+}
+
+body.dark-mode .badge.bg-danger {
+    background-color: #991b1b !important;
+    color: #fee2e2;
+}
+
+body.dark-mode .badge.bg-warning.text-dark {
+    background-color: #92400e !important;
+    color: #fef3c7;
+}
+
+body.dark-mode .badge.bg-primary {
+    background-color: #1e40af !important;
+    color: #dbeafe;
+}
+
+body.dark-mode .badge.bg-dark {
+    background-color: #4b5563 !important;
+    color: #d1d5db;
 }
