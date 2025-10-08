@@ -6,6 +6,8 @@
 
 Um sistema web completo e moderno para controle de estoque, desenvolvido para ser simples, rápido e visualmente agradável.
 
+![Screenshot do Dashboard](caminho/para/sua/imagem.png)
+*(Dica: Tire um screenshot do seu dashboard e substitua este link)*
 
 ## ✨ Funcionalidades Principais
 
@@ -51,7 +53,7 @@ O GARRY PRO foi construído com um conjunto robusto de funcionalidades para uma 
     * SweetAlert2 (Para as confirmações de exclusão)
     * Bootstrap Icons (Para os ícones)
 
-## 🚀 Como Executar o Projeto
+## 🚀 Começando
 
 Para rodar o GARRY PRO em sua máquina local, siga os passos abaixo.
 
@@ -80,6 +82,7 @@ Para rodar o GARRY PRO em sua máquina local, siga os passos abaixo.
     Flask-Login
     Werkzeug
     pytz
+    click
     ```
 
 4.  **Instale as dependências:**
@@ -87,9 +90,9 @@ Para rodar o GARRY PRO em sua máquina local, siga os passos abaixo.
     pip install -r requirements.txt
     ```
 
-### Executando
+## 🏃‍♂️ Executando o Projeto
 
-1.  **Apague o banco de dados antigo (se existir):**
+1.  **Apague o banco de dados antigo (se for a primeira vez com o sistema de login):**
     Se houver um arquivo `estoque.db` na pasta, apague-o. Ele será recriado com a nova estrutura de usuários.
 
 2.  **Execute a aplicação:**
@@ -103,6 +106,31 @@ Para rodar o GARRY PRO em sua máquina local, siga os passos abaixo.
 
 4.  **Faça o login:**
     Use uma das credenciais padrão:
-    * **Usuário:** `Teste` / **Senha:** `123`
+    * **Teste** `garry` / **Senha:** `123`
+
+---
+
+## 🔧 Administração do Sistema
+
+### Criando Novos Usuários
+
+Para adicionar um novo usuário sem apagar o banco de dados, utilize o comando de terminal que criamos.
+
+1.  **Pare o servidor** (pressione `Ctrl + C` no terminal).
+2.  Certifique-se de que seu **ambiente virtual está ativado**.
+3.  Execute o comando `flask create-user` com os dados do novo usuário na seguinte ordem: `username` `nome` `email` `senha`.
+
+    **Sintaxe:**
+    ```bash
+    flask create-user <usuario_de_login> "<Nome Completo>" <email> <senha>
+    ```
+    *Lembre-se de usar aspas duplas " " se o nome completo tiver espaços.*
+
+    **Exemplo:**
+    ```bash
+    flask create-user joana "Joana Silva" joana@email.com senha123
+    ```
+
+4.  Após ver a mensagem de sucesso, inicie o servidor novamente com `python app.py`. O novo usuário já poderá fazer login.
 
 ---

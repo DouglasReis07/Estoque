@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy import func
 from pytz import timezone
+import click
 
 # ===============================
 # CONFIGURAÇÃO
@@ -78,7 +79,15 @@ def adicionar_dados_iniciais():
 
         if Produto.query.count() == 0:
             produtos_para_adicionar = [
-                Produto(nome='TESTE1', quantidade=0, preco_custo=894.73)
+                Produto(nome='TESTE1', quantidade=0, preco_custo=894.73),
+                Produto(nome='TESTE2', quantidade=0, preco_custo=894.73),
+                Produto(nome='TESTE3', quantidade=0, preco_custo=894.73),
+                Produto(nome='TESTE4', quantidade=0, preco_custo=8.40),
+                Produto(nome='TESTE5', quantidade=0, preco_custo=21.79),
+                Produto(nome='TESTE6', quantidade=0, preco_custo=75.99),
+                Produto(nome='TESTE7', quantidade=0, preco_custo=19.00),
+                Produto(nome='TESTE8', quantidade=0, preco_custo=19.00),
+                Produto(nome='TESTE9', quantidade=4, preco_custo=295.00)
             ]
             db.session.bulk_save_objects(produtos_para_adicionar)
             print("Produtos iniciais adicionados.")
@@ -121,10 +130,12 @@ def logout():
 def dashboard():
     return render_template('index.html')
 
+
 @app.route('/estoque')
 @login_required
 def estoque_page():
     return render_template('estoque.html')
+
 
 @app.route('/movimentacoes')
 @login_required
@@ -133,6 +144,7 @@ def movimentacoes_page():
     ano_atual = agora_sp.year
     mes_atual = agora_sp.month
     return render_template('movimentacoes.html', ano_atual=ano_atual, mes_atual=mes_atual)
+
 
 # ===============================
 # API (ROTAS PROTEGIDAS)
@@ -278,6 +290,28 @@ def gerenciar_produto_especifico(produto_id):
         db.session.delete(produto)
         db.session.commit()
         return jsonify({'mensagem': 'Produto e seu histórico foram excluídos!'})
+
+@app.cli.command("create-user")
+@click.argument("username")
+@click.argument("nome")
+@click.argument("email")
+@click.argument("password")
+def create_user(username, nome, email, password):
+    """Cria um novo usuário no banco de dados."""
+    if User.query.filter_by(username=username).first():
+        print(f"Erro: O nome de usuário '{username}' já existe.")
+        return
+    if User.query.filter_by(email=email).first():
+        print(f"Erro: O e-mail '{email}' já está em uso.")
+        return
+        
+    new_user = User(username=username, nome=nome, email=email)
+    new_user.set_password(password)
+    
+    db.session.add(new_user)
+    db.session.commit()
+    
+    print(f"Usuário '{username}' criado com sucesso!")
 
 # ===============================
 # MAIN
