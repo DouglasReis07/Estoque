@@ -6,9 +6,6 @@
 
 Um sistema web completo e moderno para controle de estoque, desenvolvido para ser simples, rápido e visualmente agradável.
 
-![Screenshot do Dashboard](caminho/para/sua/imagem.png)
-*(Dica: Tire um screenshot do seu dashboard e substitua este link)*
-
 ## ✨ Funcionalidades Principais
 
 O GARRY PRO foi construído com um conjunto robusto de funcionalidades para uma gestão de estoque eficiente:
