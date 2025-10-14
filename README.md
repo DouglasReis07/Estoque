@@ -103,7 +103,7 @@ Para rodar o GARRY PRO em sua máquina local, siga os passos abaixo.
 
 4.  **Faça o login:**
     Use uma das credenciais padrão:
-    * **Teste** `garry` / **Senha:** `123`
+    * **Usuario** `Teste` / **Senha:** `123`
 
 ---
 
